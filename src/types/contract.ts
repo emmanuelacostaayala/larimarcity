@@ -57,6 +57,7 @@ export interface SpecialClauses {
   earlyPaymentInterest: boolean; // pago_anticipado -> 7% annual
   golfMembership: boolean;
   qualityMemory: boolean; // Annex
+  vacationRental?: boolean; // Rent suffix appending
 }
 
 export interface ContractPayload {

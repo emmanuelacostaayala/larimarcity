@@ -1,0 +1,2 @@
+STATUS: 500
+BODY: {"error":"Failed to generate contract PDF","details":"unsupported number: -8.854437155380585e+21"}

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { ContractPayload } from '@/types/contract';
 import { Document, Paragraph, TextRun, Packer, AlignmentType, Header, Footer, PageNumber } from 'docx';
 import { contractTemplates as t } from '@/constants/contractTemplates';
+import { getDocumentFilename } from '@/utils/documentName';
 
 export async function POST(req: NextRequest) {
     try {
@@ -643,7 +644,7 @@ export async function POST(req: NextRequest) {
             status: 200,
             headers: {
                 'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                'Content-Disposition': `attachment; filename="Contract_${payload.client.name.replace(/\s+/g, '_')}_${payload.property.unitNumber}.docx"`
+                'Content-Disposition': `attachment; filename="${getDocumentFilename(payload, 'docx')}"`
             }
         });
     } catch (error: any) {

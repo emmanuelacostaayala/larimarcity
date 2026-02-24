@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { ContractPayload } from '@/types/contract';
 import { renderToBuffer } from '@react-pdf/renderer';
 import { ContractPDF } from '@/components/pdf/ContractPDF';
+import { getDocumentFilename } from '@/utils/documentName';
 import React from 'react';
 
 export async function POST(req: NextRequest) {
@@ -19,7 +20,7 @@ export async function POST(req: NextRequest) {
             status: 200,
             headers: {
                 'Content-Type': 'application/pdf',
-                'Content-Disposition': `attachment; filename="Contract_${payload.client.name.replace(/\s+/g, '_')}_${payload.property.unitNumber}.pdf"`
+                'Content-Disposition': `attachment; filename="${getDocumentFilename(payload, 'pdf')}"`
             }
         });
     } catch (error: any) {

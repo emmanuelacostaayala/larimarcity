@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
         paddingTop: 60,
         paddingBottom: 60,
         paddingHorizontal: 60,
-        fontFamily: 'Helvetica',
+        fontFamily: 'Times-Roman',
         fontSize: 10,
         lineHeight: 1.5,
     },
@@ -30,23 +30,23 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 12,
-        fontFamily: 'Helvetica-Bold',
+        fontFamily: 'Times-Bold',
         textAlign: 'center',
         marginBottom: 20,
         marginTop: 20,
     },
     subtitle: {
         fontSize: 10,
-        fontFamily: 'Helvetica-Bold',
+        fontFamily: 'Times-Bold',
         marginTop: 15,
         marginBottom: 10,
     },
     paragraph: {
         marginBottom: 10,
-        textAlign: 'justify',
+        textAlign: 'left',
     },
     bold: {
-        fontFamily: 'Helvetica-Bold',
+        fontFamily: 'Times-Bold',
     },
     signatureBlock: {
         flexDirection: 'row',
@@ -272,7 +272,7 @@ export const ContractPDF = ({ payload }: ContractPDFProps) => {
                 <Text style={styles.subtitle}>{t.VIGESIMO_QUINTO_TITLE}</Text>
                 <Text style={styles.paragraph}>{t.VIGESIMO_QUINTO_BODY}</Text>
 
-                <Text style={[styles.paragraph, { marginTop: 40, textAlign: 'center', fontFamily: 'Helvetica-Bold' }]} break>
+                <Text style={[styles.paragraph, { marginTop: 40, textAlign: 'center', fontFamily: 'Times-Bold' }]} break>
                     {t.HECHO_Y_FIRMADO_1} ({day}) días del mes de {month.toUpperCase()} del año {year}.
                 </Text>
 
@@ -300,9 +300,7 @@ export const ContractPDF = ({ payload }: ContractPDFProps) => {
                 </View>
 
                 {/* Footer that repeats on all pages */}
-                <Text style={styles.footer} render={({ pageNumber, totalPages }) => (
-                    `Larimar City & Resort | Contrato de Opcion de Compraventa | Pág. ${pageNumber} de ${totalPages}`
-                )} fixed />
+                <Text style={styles.footer} fixed>Larimar City & Resort | Contrato de Opcion de Compraventa</Text>
             </Page>
         </Document>
     );
