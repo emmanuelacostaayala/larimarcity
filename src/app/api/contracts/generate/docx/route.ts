@@ -238,6 +238,15 @@ export async function POST(req: NextRequest) {
                             new TextRun(t.PRIMERO_PARRAFO_III)
                         ]
                     }),
+                    ...(payload.clauses.golfMembership ? [
+                        new Paragraph({
+                            alignment: AlignmentType.JUSTIFIED,
+                            spacing: { after: 200 },
+                            children: [
+                                new TextRun(t.PRIMERO_PARRAFO_IV_GOLF)
+                            ]
+                        })
+                    ] : []),
                     new Paragraph({
                         spacing: { before: 200, after: 200 },
                         children: [
@@ -544,11 +553,34 @@ export async function POST(req: NextRequest) {
                             new TextRun({ text: t.D_QUINTO_TITLE, bold: true, size: 20 })
                         ]
                     }),
+                    ...(payload.clauses.earlyPaymentInterest ? [
+                        new Paragraph({
+                            spacing: { before: 200, after: 200 },
+                            children: [
+                                new TextRun({ text: "DÉCIMO QUINTO: PAGO ANTICIPADO DE INTERESES.", bold: true, size: 20 })
+                            ]
+                        }),
+                        new Paragraph({
+                            alignment: AlignmentType.JUSTIFIED,
+                            spacing: { after: 200 },
+                            children: [
+                                new TextRun("LAS PARTES acuerdan que EL BENEFICIARIO recibirá un interés equivalente al siete por ciento (7%) anual sobre los montos que decida abonar de manera anticipada al cronograma de construcción, hasta el momento de la entrega formal de la unidad.")
+                            ]
+                        })
+                    ] : []),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.D_QUINTO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
                     new Paragraph({
                         alignment: AlignmentType.JUSTIFIED,
                         spacing: { after: 200 },
                         children: [
-                            new TextRun(t.D_QUINTO_BODY)
+                            new TextRun(t.D_QUINTO_BODY_1),
+                            new TextRun({ text: legalAmount(pay.totalPrice * 0.20), bold: true }),
+                            new TextRun(t.D_QUINTO_BODY_2)
                         ]
                     }),
                     new Paragraph({
@@ -687,7 +719,76 @@ export async function POST(req: NextRequest) {
                         children: [
                             new TextRun({ text: `HECHO Y FIRMADO en tres (3) originales de un mismo tenor y efecto, uno para cada una de las partes. En Punta Cana, a los ${contractDate}.`, bold: true })
                         ]
+                    }),
+
+                    // ANEXOS
+                    ...(payload.clauses.qualityMemory ? [
+                        new Paragraph({
+                            pageBreakBefore: true,
+                            alignment: AlignmentType.CENTER,
+                            spacing: { before: 1800, after: 400 },
+                            children: [new TextRun({ text: t.ANEXO_I_TITLE, bold: true, size: 24 })]
+                        }),
+                        new Paragraph({
+                            alignment: AlignmentType.CENTER,
+                            children: [new TextRun({ text: `${p.project.toUpperCase()} - Unidad ${p.unitNumber}`, size: 16, color: '666666' })]
+                        }),
+                        new Paragraph({
+                            alignment: AlignmentType.CENTER,
+                            spacing: { before: 1000 },
+                            children: [new TextRun(t.ANEXO_I_BODY)]
+                        }),
+                        new Paragraph({
+                            alignment: AlignmentType.CENTER,
+                            spacing: { before: 400 },
+                            children: [new TextRun({ text: "[ Espacio para adjuntar documento ]", color: '999999' })]
+                        })
+                    ] : []),
+
+                    ...(payload.clauses.golfMembership ? [
+                        new Paragraph({
+                            pageBreakBefore: true,
+                            alignment: AlignmentType.CENTER,
+                            spacing: { before: 1800, after: 400 },
+                            children: [new TextRun({ text: t.ANEXO_II_TITLE, bold: true, size: 24 })]
+                        }),
+                        new Paragraph({
+                            alignment: AlignmentType.CENTER,
+                            children: [new TextRun({ text: `${p.project.toUpperCase()} - Unidad ${p.unitNumber}`, size: 16, color: '666666' })]
+                        }),
+                        new Paragraph({
+                            alignment: AlignmentType.CENTER,
+                            spacing: { before: 1000 },
+                            children: [new TextRun(t.ANEXO_II_BODY)]
+                        }),
+                        new Paragraph({
+                            alignment: AlignmentType.CENTER,
+                            spacing: { before: 400 },
+                            children: [new TextRun({ text: "[ Espacio para adjuntar certificados ]", color: '999999' })]
+                        })
+                    ] : []),
+
+                    new Paragraph({
+                        pageBreakBefore: true,
+                        alignment: AlignmentType.CENTER,
+                        spacing: { before: 1800, after: 400 },
+                        children: [new TextRun({ text: t.ANEXO_III_TITLE, bold: true, size: 24 })]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.CENTER,
+                        children: [new TextRun({ text: `${p.project.toUpperCase()} - Unidad ${p.unitNumber}`, size: 16, color: '666666' })]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.CENTER,
+                        spacing: { before: 1000 },
+                        children: [new TextRun(t.ANEXO_III_BODY)]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.CENTER,
+                        spacing: { before: 400 },
+                        children: [new TextRun({ text: "[ Espacio para adjuntar planos topográficos/arquitectónicos ]", color: '999999' })]
                     })
+
                 ]
             }]
         });

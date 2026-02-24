@@ -241,6 +241,9 @@ export const ContractPDF = ({ payload }: ContractPDFProps) => {
                 <Text style={styles.paragraph}>{t.PRIMERO_PARRAFO_I}</Text>
                 <Text style={styles.paragraph}>{t.PRIMERO_PARRAFO_II}</Text>
                 <Text style={styles.paragraph}>{t.PRIMERO_PARRAFO_III}</Text>
+                {payload.clauses.golfMembership && (
+                    <Text style={styles.paragraph}>{t.PRIMERO_PARRAFO_IV_GOLF}</Text>
+                )}
 
                 <Text style={styles.subtitle}>{t.SEGUNDO_TITLE}</Text>
                 <Text style={styles.paragraph}>{t.SEGUNDO_BODY}</Text>
@@ -319,17 +322,14 @@ export const ContractPDF = ({ payload }: ContractPDFProps) => {
                     </>
                 )}
 
-                {payload.clauses.golfMembership && (
-                    <>
-                        <Text style={styles.subtitle}>DÉCIMO SEXTO: MEMBRESÍA DEL CLUB DE GOLF.</Text>
-                        <Text style={styles.paragraph}>
-                            EL PROPIETARIO por este medio otorga a EL BENEFICIARIO una membresía honorífica permanente para el uso del Campo de Golf y el Country Club dentro de las instalaciones del proyecto Larimar City & Resort, exenta de tarifas de inscripción, quedando sujeta únicamente a las cuotas de mantenimiento regulares una vez habilitado el campo.
-                        </Text>
-                    </>
-                )}
+
 
                 <Text style={styles.subtitle}>{t.D_QUINTO_TITLE}</Text>
-                <Text style={styles.paragraph}>{t.D_QUINTO_BODY}</Text>
+                <Text style={styles.paragraph}>
+                    {t.D_QUINTO_BODY_1}
+                    <Text style={styles.bold}>{legalAmount(pay.totalPrice * 0.20)}</Text>
+                    {t.D_QUINTO_BODY_2}
+                </Text>
 
                 <Text style={styles.subtitle}>{t.D_SEXTO_TITLE}</Text>
                 <Text style={styles.paragraph}>{t.D_SEXTO_BODY}</Text>
@@ -390,6 +390,35 @@ export const ContractPDF = ({ payload }: ContractPDFProps) => {
 
                 {/* Footer that repeats on all pages */}
                 <Text style={styles.footer} fixed>Larimar City & Resort | Contrato de Opcion de Compraventa</Text>
+            </Page>
+
+            {/* ANEXOS */}
+            {payload.clauses.qualityMemory && (
+                <Page size="A4" style={styles.page}>
+                    <Text style={[styles.title, { marginTop: 200, fontSize: 16 }]}>{t.ANEXO_I_TITLE}</Text>
+                    <Text style={[styles.title, { marginTop: 20, color: '#666' }]}>{p.project.toUpperCase()} - Unidad {p.unitNumber}</Text>
+                    <Text style={[styles.paragraph, { textAlign: 'center', marginTop: 100 }]}>{t.ANEXO_I_BODY}</Text>
+                    <Text style={[styles.paragraph, { textAlign: 'center', marginTop: 40, color: '#999', fontSize: 14 }]}>[ Espacio para adjuntar documento ]</Text>
+                    <Text style={styles.footer} fixed>Larimar City & Resort | Anexo I</Text>
+                </Page>
+            )}
+
+            {payload.clauses.golfMembership && (
+                <Page size="A4" style={styles.page}>
+                    <Text style={[styles.title, { marginTop: 200, fontSize: 16 }]}>{t.ANEXO_II_TITLE}</Text>
+                    <Text style={[styles.title, { marginTop: 20, color: '#666' }]}>{p.project.toUpperCase()} - Unidad {p.unitNumber}</Text>
+                    <Text style={[styles.paragraph, { textAlign: 'center', marginTop: 100 }]}>{t.ANEXO_II_BODY}</Text>
+                    <Text style={[styles.paragraph, { textAlign: 'center', marginTop: 40, color: '#999', fontSize: 14 }]}>[ Espacio para adjuntar certificados ]</Text>
+                    <Text style={styles.footer} fixed>Larimar City & Resort | Anexo II</Text>
+                </Page>
+            )}
+
+            <Page size="A4" style={styles.page}>
+                <Text style={[styles.title, { marginTop: 200, fontSize: 16 }]}>{t.ANEXO_III_TITLE}</Text>
+                <Text style={[styles.title, { marginTop: 20, color: '#666' }]}>{p.project.toUpperCase()} - Unidad {p.unitNumber}</Text>
+                <Text style={[styles.paragraph, { textAlign: 'center', marginTop: 100 }]}>{t.ANEXO_III_BODY}</Text>
+                <Text style={[styles.paragraph, { textAlign: 'center', marginTop: 40, color: '#999', fontSize: 14 }]}>[ Espacio para adjuntar planos topográficos/arquitectónicos ]</Text>
+                <Text style={styles.footer} fixed>Larimar City & Resort | Anexo III</Text>
             </Page>
         </Document>
     );
