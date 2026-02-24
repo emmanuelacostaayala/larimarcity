@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Save, Loader2, ArrowLeft, ArrowRight, Check, FileText, Eye } from 'lucide-react';
+import { Save, Loader2, ArrowLeft, ArrowRight, Check, FileText, Eye, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PartyForm } from '@/components/forms/PartyForm';
 import { PropertyForm } from '@/components/forms/PropertyForm';
@@ -15,11 +15,11 @@ import { formatLegalCurrency } from '@/utils/numberToWords';
 import { buildInstallmentTable, formatPaymentDate } from '@/utils/paymentTable';
 
 const STEPS = [
-    { id: 'client', title: 'Datos del Cliente' },
-    { id: 'property', title: 'Propiedad' },
-    { id: 'payment', title: 'Plan de Pago' },
-    { id: 'clauses', title: 'Cláusulas' },
-    { id: 'preview', title: 'Vista Previa' },
+    { id: 'client', label: 'Cliente' },
+    { id: 'property', label: 'Propiedad' },
+    { id: 'payment', label: 'Plan de Pago' },
+    { id: 'clauses', label: 'Cláusulas' },
+    { id: 'preview', label: 'Vista Previa' },
 ];
 
 // ─── Preview Component ────────────────────────────────────────────────────────
@@ -35,23 +35,22 @@ function ContractPreview({ payload }: { payload: Partial<ContractPayload> }) {
     const rows = buildInstallmentTable(pay);
 
     const field = (label: string, value?: string | number) => (
-        <div className="flex justify-between py-2 border-b border-border last:border-0">
-            <span className="text-sm text-muted-foreground">{label}</span>
-            <span className="text-sm font-medium text-foreground text-right max-w-[60%]">{value ?? '—'}</span>
+        <div className="flex justify-between py-2" style={{ borderBottom: '1px solid hsl(var(--border))' }}>
+            <span className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>{label}</span>
+            <span className="text-sm font-medium text-right max-w-[60%]" style={{ color: 'hsl(var(--foreground))' }}>{value ?? '—'}</span>
         </div>
     );
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center gap-2 text-primary font-semibold">
+        <div className="space-y-4">
+            <div className="flex items-center gap-2 font-semibold" style={{ color: 'hsl(var(--primary))' }}>
                 <Eye className="w-5 h-5" />
                 <span>Vista Previa del Contrato</span>
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
-                {/* Client */}
-                <div className="rounded-xl border border-border bg-card/50 p-5 shadow-sm">
-                    <h3 className="font-semibold text-foreground mb-3 text-sm uppercase tracking-wider opacity-60">Beneficiario</h3>
+                <div className="rounded-2xl p-5" style={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }}>
+                    <h3 className="font-semibold text-xs uppercase tracking-widest mb-3" style={{ color: 'hsl(var(--muted-foreground))' }}>Beneficiario</h3>
                     {field('Nombre', c.name)}
                     {field('Tipo', c.type === 'Fisica' ? 'Persona Física' : 'Sociedad')}
                     {c.type === 'Fisica' && field('Documento', `${c.documentType} · ${c.documentNumber}`)}
@@ -59,10 +58,8 @@ function ContractPreview({ payload }: { payload: Partial<ContractPayload> }) {
                     {c.type === 'Sociedad' && field('RNC / CIF', c.rncCif)}
                     {field('Domicilio', c.address)}
                 </div>
-
-                {/* Property */}
-                <div className="rounded-xl border border-border bg-card/50 p-5 shadow-sm">
-                    <h3 className="font-semibold text-foreground mb-3 text-sm uppercase tracking-wider opacity-60">Propiedad</h3>
+                <div className="rounded-2xl p-5" style={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }}>
+                    <h3 className="font-semibold text-xs uppercase tracking-widest mb-3" style={{ color: 'hsl(var(--muted-foreground))' }}>Propiedad</h3>
                     {field('Proyecto', p.project)}
                     {field('Unidad', p.unitNumber)}
                     {field('Nivel', String(p.level))}
@@ -71,44 +68,43 @@ function ContractPreview({ payload }: { payload: Partial<ContractPayload> }) {
                 </div>
             </div>
 
-            {/* Payment summary */}
-            <div className="rounded-xl border border-border bg-card/50 p-5 shadow-sm">
-                <h3 className="font-semibold text-foreground mb-3 text-sm uppercase tracking-wider opacity-60">Plan de Pago</h3>
+            <div className="rounded-2xl p-5" style={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }}>
+                <h3 className="font-semibold text-xs uppercase tracking-widest mb-3" style={{ color: 'hsl(var(--muted-foreground))' }}>Plan de Pago</h3>
                 <div className="grid md:grid-cols-2 gap-x-8">
                     {field('Moneda', currency)}
                     {field('Precio Total', formatLegalCurrency(pay.totalPrice, currency))}
                     {!pay.isCash && field('Reserva', formatLegalCurrency(pay.reservationAmount, currency))}
                     {!pay.isCash && field('Inicial', formatLegalCurrency(pay.downPaymentAmount, currency))}
-                    {!pay.isCash && field('Cuotas Construcción', String(pay.constructionInstallments) + ' cuotas mensuales')}
+                    {!pay.isCash && field('Cuotas', String(pay.constructionInstallments) + ' cuotas mensuales')}
                     {field('Contra Entrega', formatLegalCurrency(pay.deliveryAmount, currency))}
                 </div>
             </div>
 
-            {/* Payment Table */}
             {rows.length > 0 && (
-                <div className="rounded-xl border border-border bg-card/50 overflow-hidden shadow-sm">
-                    <div className="bg-[#1a1a2e] text-white text-center py-2.5 text-xs font-bold tracking-widest uppercase">
+                <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid hsl(var(--border))' }}>
+                    <div className="text-center py-2.5 text-xs font-bold tracking-widest uppercase"
+                        style={{ background: 'hsl(var(--primary))', color: 'hsl(var(--primary-foreground))' }}>
                         Plan de Pagos
                     </div>
                     <div className="overflow-x-auto">
                         <table className="w-full text-xs">
-                            <thead className="bg-muted/70 border-b border-border">
+                            <thead style={{ background: 'hsl(var(--muted) / 0.5)', borderBottom: '1px solid hsl(var(--border))' }}>
                                 <tr>
-                                    <th className="px-3 py-2 text-left font-semibold text-muted-foreground">Concepto</th>
-                                    <th className="px-3 py-2 text-center font-semibold text-muted-foreground">#</th>
-                                    <th className="px-3 py-2 text-right font-semibold text-muted-foreground">Importe</th>
-                                    <th className="px-3 py-2 text-left font-semibold text-muted-foreground hidden md:table-cell">En Letras</th>
-                                    <th className="px-3 py-2 text-center font-semibold text-muted-foreground">Fecha</th>
+                                    <th className="px-3 py-2 text-left font-semibold" style={{ color: 'hsl(var(--muted-foreground))' }}>Concepto</th>
+                                    <th className="px-3 py-2 text-center font-semibold" style={{ color: 'hsl(var(--muted-foreground))' }}>#</th>
+                                    <th className="px-3 py-2 text-right font-semibold" style={{ color: 'hsl(var(--muted-foreground))' }}>Importe</th>
+                                    <th className="px-3 py-2 text-left font-semibold hidden md:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>En Letras</th>
+                                    <th className="px-3 py-2 text-center font-semibold" style={{ color: 'hsl(var(--muted-foreground))' }}>Fecha</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-border">
+                            <tbody>
                                 {rows.map((row, idx) => (
-                                    <tr key={idx} className={idx % 2 === 1 ? 'bg-muted/30' : ''}>
+                                    <tr key={idx} style={{ borderBottom: '1px solid hsl(var(--border))', background: idx % 2 === 1 ? 'hsl(var(--muted) / 0.3)' : 'transparent' }}>
                                         <td className="px-3 py-2 font-medium">{row.label}</td>
-                                        <td className="px-3 py-2 text-center text-muted-foreground">{idx}</td>
+                                        <td className="px-3 py-2 text-center" style={{ color: 'hsl(var(--muted-foreground))' }}>{idx}</td>
                                         <td className="px-3 py-2 text-right font-mono">{new Intl.NumberFormat('es-DO', { minimumFractionDigits: 2 }).format(row.amount)}</td>
-                                        <td className="px-3 py-2 text-muted-foreground hidden md:table-cell">{formatLegalCurrency(row.amount, currency)}</td>
-                                        <td className="px-3 py-2 text-center text-muted-foreground">{formatPaymentDate(row.dueDate)}</td>
+                                        <td className="px-3 py-2 hidden md:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{formatLegalCurrency(row.amount, currency)}</td>
+                                        <td className="px-3 py-2 text-center" style={{ color: 'hsl(var(--muted-foreground))' }}>{formatPaymentDate(row.dueDate)}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -117,16 +113,15 @@ function ContractPreview({ payload }: { payload: Partial<ContractPayload> }) {
                 </div>
             )}
 
-            {/* Clauses */}
-            <div className="rounded-xl border border-border bg-card/50 p-5 shadow-sm">
-                <h3 className="font-semibold text-foreground mb-3 text-sm uppercase tracking-wider opacity-60">Cláusulas Especiales</h3>
+            <div className="rounded-2xl p-5" style={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }}>
+                <h3 className="font-semibold text-xs uppercase tracking-widest mb-3" style={{ color: 'hsl(var(--muted-foreground))' }}>Cláusulas Especiales</h3>
                 <div className="flex flex-wrap gap-2">
-                    {cl.earlyPaymentInterest && <span className="px-2 py-1 rounded-full text-xs bg-amber-500/10 text-amber-500 ring-1 ring-amber-500/20">Interés Pago Anticipado</span>}
-                    {cl.golfMembership && <span className="px-2 py-1 rounded-full text-xs bg-emerald-500/10 text-emerald-500 ring-1 ring-emerald-500/20">Membresía Golf</span>}
-                    {cl.qualityMemory && <span className="px-2 py-1 rounded-full text-xs bg-blue-500/10 text-blue-500 ring-1 ring-blue-500/20">Memoria de Calidades</span>}
-                    {cl.vacationRental && <span className="px-2 py-1 rounded-full text-xs bg-purple-500/10 text-purple-500 ring-1 ring-purple-500/20">Alquiler Vacacional</span>}
+                    {cl.earlyPaymentInterest && <span className="px-3 py-1 rounded-full text-xs font-semibold" style={{ background: 'hsl(40 90% 55% / 0.12)', color: 'hsl(40 90% 50%)', border: '1px solid hsl(40 90% 55% / 0.25)' }}>Interés Pago Anticipado</span>}
+                    {cl.golfMembership && <span className="px-3 py-1 rounded-full text-xs font-semibold" style={{ background: 'hsl(140 70% 50% / 0.12)', color: 'hsl(140 60% 40%)', border: '1px solid hsl(140 70% 50% / 0.25)' }}>Membresía Golf</span>}
+                    {cl.qualityMemory && <span className="px-3 py-1 rounded-full text-xs font-semibold" style={{ background: 'hsl(var(--primary) / 0.12)', color: 'hsl(var(--primary))', border: '1px solid hsl(var(--primary) / 0.25)' }}>Memoria de Calidades</span>}
+                    {cl.vacationRental && <span className="px-3 py-1 rounded-full text-xs font-semibold" style={{ background: 'hsl(270 80% 65% / 0.12)', color: 'hsl(270 80% 60%)', border: '1px solid hsl(270 80% 65% / 0.25)' }}>Alquiler Vacacional</span>}
                     {!cl.earlyPaymentInterest && !cl.golfMembership && !cl.qualityMemory && !cl.vacationRental &&
-                        <span className="text-sm text-muted-foreground">Sin cláusulas adicionales</span>}
+                        <span className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>Sin cláusulas adicionales</span>}
                 </div>
             </div>
         </div>
@@ -162,9 +157,7 @@ export default function NewContractPage() {
     const validateStep = () => {
         if (currentStep === 0) {
             const client = payload.client;
-            if (!client?.name || !client?.address) {
-                alert('Por favor completa Nombre y Dirección.'); return false;
-            }
+            if (!client?.name || !client?.address) { alert('Por favor completa Nombre y Dirección.'); return false; }
             if (client.type === 'Fisica' && (!client.documentNumber || !client.nationality)) {
                 alert('Completa el Número de Documento y Nacionalidad.'); return false;
             }
@@ -180,21 +173,13 @@ export default function NewContractPage() {
         }
         if (currentStep === 2) {
             const { totalPrice } = payload.paymentPlan || {};
-            if (!totalPrice || totalPrice <= 0) {
-                alert('Ingresa un Precio Total válido.'); return false;
-            }
+            if (!totalPrice || totalPrice <= 0) { alert('Ingresa un Precio Total válido.'); return false; }
         }
         return true;
     };
 
-    const handleNext = () => {
-        if (!validateStep()) return;
-        if (currentStep < STEPS.length - 1) setCurrentStep((p) => p + 1);
-    };
-
-    const handlePrev = () => {
-        if (currentStep > 0) setCurrentStep((p) => p - 1);
-    };
+    const handleNext = () => { if (!validateStep()) return; if (currentStep < STEPS.length - 1) setCurrentStep(p => p + 1); };
+    const handlePrev = () => { if (currentStep > 0) setCurrentStep(p => p - 1); };
 
     const handleGenerate = async (format: 'pdf' | 'docx') => {
         setLoadingFormat(format);
@@ -205,30 +190,14 @@ export default function NewContractPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
-
             if (!res.ok) throw new Error('API Error');
             const blob = await res.blob();
             const url = window.URL.createObjectURL(blob);
-
             const { getDocumentFilename: gdf } = await import('@/utils/documentName');
             const filename = gdf(payload as ContractPayload, format);
-
-            // Trigger download
             const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            a.click();
-
-            // Save to contract store
-            addContract({
-                id: crypto.randomUUID(),
-                generatedAt: new Date().toISOString(),
-                payload: payload as ContractPayload,
-                filename,
-                format,
-                blobUrl: url,
-            });
-
+            a.href = url; a.download = filename; a.click();
+            addContract({ id: crypto.randomUUID(), generatedAt: new Date().toISOString(), payload: payload as ContractPayload, filename, format, blobUrl: url });
         } catch (err) {
             console.error(err);
             alert(`Error al generar ${format.toUpperCase()}`);
@@ -241,64 +210,105 @@ export default function NewContractPage() {
     const isLoading = loadingFormat !== null;
 
     return (
-        <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-            <div className="mb-8">
-                <h1 className="text-2xl font-bold tracking-tight text-foreground">Nuevo Contrato</h1>
-                <p className="text-sm text-muted-foreground mt-1">
+        <div className="max-w-4xl mx-auto space-y-6">
+            {/* Page Header */}
+            <div>
+                <div className="flex items-center gap-2 mb-1">
+                    <Sparkles className="w-4 h-4" style={{ color: 'hsl(var(--primary))' }} />
+                    <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'hsl(var(--primary))' }}>
+                        Contratos
+                    </span>
+                </div>
+                <h1 className="text-2xl font-bold tracking-tight" style={{ color: 'hsl(var(--foreground))' }}>Nuevo Contrato</h1>
+                <p className="text-sm mt-1" style={{ color: 'hsl(var(--muted-foreground))' }}>
                     Completa los datos y revisa la vista previa antes de generar.
                 </p>
             </div>
 
-            {/* Stepper Header */}
-            <nav aria-label="Progress" className="mb-12">
-                <ol role="list" className="flex items-center">
+            {/* ── Stepper ─────────────────────────────────────────────── */}
+            <div className="rounded-2xl p-5" style={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }}>
+                {/* Step Circles + Connector Row */}
+                <div className="relative flex items-center">
                     {STEPS.map((step, index) => {
                         const isCurrent = currentStep === index;
                         const isCompleted = currentStep > index;
+                        const isLast = index === STEPS.length - 1;
 
                         return (
-                            <li key={step.id} className={`relative ${index !== STEPS.length - 1 ? 'pr-6 sm:pr-16 flex-1' : ''}`}>
-                                <div className="flex items-center">
-                                    <div
-                                        className={`${isCompleted
-                                            ? 'bg-primary'
-                                            : isCurrent
-                                                ? 'border-2 border-primary bg-background'
-                                                : 'border-2 border-border bg-background'
-                                            } flex h-8 w-8 items-center justify-center rounded-full transition-colors shrink-0`}
+                            <div key={step.id} className="flex items-center" style={{ flex: isLast ? '0 0 auto' : '1 1 0' }}>
+                                {/* Circle */}
+                                <div className="relative z-10 shrink-0">
+                                    <motion.div
+                                        animate={{
+                                            scale: isCurrent ? 1.1 : 1,
+                                        }}
+                                        transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                                        className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300"
+                                        style={
+                                            isCompleted
+                                                ? { background: 'hsl(var(--primary))', color: 'hsl(var(--primary-foreground))', boxShadow: '0 0 12px hsl(var(--primary) / 0.4)' }
+                                                : isCurrent
+                                                    ? { background: 'hsl(var(--background))', color: 'hsl(var(--primary))', border: '2.5px solid hsl(var(--primary))', boxShadow: '0 0 16px hsl(var(--primary) / 0.35)' }
+                                                    : { background: 'hsl(var(--muted))', color: 'hsl(var(--muted-foreground))', border: '2px solid hsl(var(--border))' }
+                                        }
                                     >
-                                        {isCompleted ? (
-                                            <Check className="h-5 w-5 text-primary-foreground" />
-                                        ) : (
-                                            <span className={`${isCurrent ? 'text-primary' : 'text-muted-foreground'} text-sm font-medium`}>
-                                                {index + 1}
-                                            </span>
-                                        )}
-                                    </div>
-                                    <div className="ml-3 hidden sm:block font-medium">
-                                        <span className={`${isCurrent ? 'text-primary font-semibold' : 'text-muted-foreground'} text-xs`}>
-                                            {step.title}
-                                        </span>
-                                    </div>
-                                    {index !== STEPS.length - 1 && (
-                                        <div className={`absolute top-4 left-8 right-0 h-0.5 hidden sm:block ${isCompleted ? 'bg-primary' : 'bg-border'} transition-colors`} style={{ marginLeft: '8px' }} />
-                                    )}
+                                        {isCompleted ? <Check className="w-4 h-4" /> : index + 1}
+                                    </motion.div>
                                 </div>
-                            </li>
+
+                                {/* Connector line (between steps) */}
+                                {!isLast && (
+                                    <div className="flex-1 mx-2 h-0.5 relative overflow-hidden rounded-full" style={{ background: 'hsl(var(--border))' }}>
+                                        <motion.div
+                                            className="absolute inset-y-0 left-0 rounded-full"
+                                            style={{ background: 'hsl(var(--primary))' }}
+                                            initial={{ width: 0 }}
+                                            animate={{ width: isCompleted ? '100%' : '0%' }}
+                                            transition={{ duration: 0.4, ease: 'easeInOut' }}
+                                        />
+                                    </div>
+                                )}
+                            </div>
                         );
                     })}
-                </ol>
-            </nav>
+                </div>
 
-            {/* Form Area */}
-            <div className={`${isLastStep ? '' : 'bg-card border border-border rounded-xl shadow-sm p-6 sm:p-8'} min-h-[400px]`}>
+                {/* Step Labels Row */}
+                <div className="flex mt-3">
+                    {STEPS.map((step, index) => {
+                        const isCurrent = currentStep === index;
+                        const isCompleted = currentStep > index;
+                        const isLast = index === STEPS.length - 1;
+                        return (
+                            <div
+                                key={step.id}
+                                className="text-xs font-medium shrink-0 text-left"
+                                style={{
+                                    flex: isLast ? '0 0 auto' : '1 1 0',
+                                    color: isCompleted || isCurrent ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))',
+                                    fontWeight: isCurrent ? 700 : 500,
+                                }}
+                            >
+                                {step.label}
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+
+            {/* ── Form Area ─────────────────────────────────────────────── */}
+            <div className={isLastStep ? '' : 'rounded-2xl p-6 sm:p-8'} style={isLastStep ? {} : {
+                background: 'hsl(var(--card))',
+                border: '1px solid hsl(var(--border))',
+                minHeight: '400px',
+            }}>
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={currentStep}
-                        initial={{ opacity: 0, x: 20 }}
+                        initial={{ opacity: 0, x: 24 }}
                         animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                        transition={{ duration: 0.2 }}
+                        exit={{ opacity: 0, x: -24 }}
+                        transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
                     >
                         {currentStep === 0 && <PartyForm payload={payload} setPayload={setPayload} />}
                         {currentStep === 1 && <PropertyForm payload={payload} setPayload={setPayload} />}
@@ -309,41 +319,57 @@ export default function NewContractPage() {
                 </AnimatePresence>
             </div>
 
-            {/* Footer Controls */}
-            <div className="mt-8 flex items-center justify-between">
-                <Button variant="outline" onClick={handlePrev} disabled={currentStep === 0} className="gap-2">
+            {/* ── Footer Controls ───────────────────────────────────────── */}
+            <div className="flex items-center justify-between pb-6">
+                <Button
+                    variant="outline"
+                    onClick={handlePrev}
+                    disabled={currentStep === 0}
+                    className="gap-2 rounded-xl"
+                >
                     <ArrowLeft className="w-4 h-4" />
                     Atrás
                 </Button>
 
                 {isLastStep ? (
                     <div className="flex gap-3">
-                        <Button
-                            onClick={() => handleGenerate('pdf')}
-                            disabled={isLoading}
-                            className="gap-2 bg-red-600 hover:bg-red-700 text-white"
-                        >
-                            {loadingFormat === 'pdf' ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
-                            {loadingFormat === 'pdf' ? 'Generando...' : 'Generar PDF'}
-                        </Button>
-                        <Button
-                            variant="secondary"
-                            onClick={() => handleGenerate('docx')}
-                            disabled={isLoading}
-                            className="gap-2"
-                        >
-                            {loadingFormat === 'docx' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                            {loadingFormat === 'docx' ? 'Generando...' : 'Generar DOCX'}
-                        </Button>
+                        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                            <Button
+                                onClick={() => handleGenerate('pdf')}
+                                disabled={isLoading}
+                                className="gap-2 rounded-xl font-semibold"
+                                style={{ background: 'hsl(0 72% 51%)', color: 'white', boxShadow: '0 4px 12px hsl(0 72% 51% / 0.3)' }}
+                            >
+                                {loadingFormat === 'pdf' ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
+                                {loadingFormat === 'pdf' ? 'Generando...' : 'Generar PDF'}
+                            </Button>
+                        </motion.div>
+                        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                            <Button
+                                variant="secondary"
+                                onClick={() => handleGenerate('docx')}
+                                disabled={isLoading}
+                                className="gap-2 rounded-xl font-semibold"
+                            >
+                                {loadingFormat === 'docx' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                                {loadingFormat === 'docx' ? 'Generando...' : 'Generar DOCX'}
+                            </Button>
+                        </motion.div>
                     </div>
                 ) : (
-                    <Button onClick={handleNext} className="gap-2">
-                        {currentStep === STEPS.length - 2 ? (
-                            <><Eye className="w-4 h-4" /> Vista Previa</>
-                        ) : (
-                            <>Siguiente <ArrowRight className="w-4 h-4" /></>
-                        )}
-                    </Button>
+                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                        <Button
+                            onClick={handleNext}
+                            className="gap-2 rounded-xl font-semibold"
+                            style={{ background: 'hsl(var(--primary))', color: 'hsl(var(--primary-foreground))', boxShadow: '0 4px 14px hsl(var(--primary) / 0.35)' }}
+                        >
+                            {currentStep === STEPS.length - 2 ? (
+                                <><Eye className="w-4 h-4" /> Vista Previa</>
+                            ) : (
+                                <>Siguiente <ArrowRight className="w-4 h-4" /></>
+                            )}
+                        </Button>
+                    </motion.div>
                 )}
             </div>
         </div>
