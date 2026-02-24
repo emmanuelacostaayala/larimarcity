@@ -25,8 +25,20 @@ export default function NewContractPage() {
         date: new Date().toISOString(),
         client: { type: 'Fisica', documentType: 'Pasaporte', documentNumber: '', civilStatus: 'Soltero', nationality: '', name: '', address: '' },
         property: { project: 'Prime Towers', unitNumber: '', level: 1, squareMeters: 0, rooms: 1, bathrooms: 1 },
-        paymentPlan: { currency: 'USD', totalPrice: 0, isCash: false, reservationAmount: 0, downPaymentAmount: 0, installments: [], deliveryAmount: 0 },
-        clauses: { earlyPaymentInterest: false, golfMembership: false, qualityMemory: true }
+        paymentPlan: {
+            currency: 'USD',
+            totalPrice: 0,
+            isCash: false,
+            reservationAmount: 0,
+            reservationDate: '',
+            downPaymentAmount: 0,
+            downPaymentDate: '',
+            constructionInstallments: 10,
+            constructionStartDate: '',
+            installments: [],
+            deliveryAmount: 0
+        },
+        clauses: { earlyPaymentInterest: false, golfMembership: false, qualityMemory: true, vacationRental: false }
     });
 
     const [isLoading, setIsLoading] = useState(false);
@@ -95,7 +107,11 @@ export default function NewContractPage() {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `Contract_${payload.client?.name}_${payload.property?.unitNumber}.${format}`;
+
+            // Sync with strict nomenclature format
+            const { getDocumentFilename } = await import('@/utils/documentName');
+            a.download = getDocumentFilename(payload as ContractPayload, format);
+
             a.click();
         } catch (err) {
             console.error(err);

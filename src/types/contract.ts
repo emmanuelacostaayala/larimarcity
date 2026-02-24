@@ -39,8 +39,8 @@ export interface Property {
 
 export interface Installment {
   amount: number;
-  dueDate: string; // ISO date or description
-  description?: string;
+  dueDate: string; // ISO date or "EN ENTREGA"
+  label: string;   // e.g. "RESERVA", "INICIAL", "CUOTAS CONSTRUCCIÓN"
 }
 
 export interface PaymentPlan {
@@ -48,9 +48,13 @@ export interface PaymentPlan {
   totalPrice: number;
   isCash: boolean;
   reservationAmount: number;
+  reservationDate?: string;       // ISO date for reservation payment
   downPaymentAmount: number;
-  installments: Installment[];
-  deliveryAmount: number; // Saldo Contra Entrega
+  downPaymentDate?: string;       // ISO date for down payment
+  constructionInstallments: number;  // number of monthly construction payments
+  constructionStartDate?: string; // ISO date of first construction installment
+  installments: Installment[];    // auto-computed or manual
+  deliveryAmount: number;         // Saldo Contra Entrega
 }
 
 export interface SpecialClauses {

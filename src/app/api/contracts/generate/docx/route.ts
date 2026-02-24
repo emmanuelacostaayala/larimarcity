@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ContractPayload } from '@/types/contract';
-import { Document, Paragraph, TextRun, Packer, AlignmentType, Header, Footer, PageNumber } from 'docx';
+import { Document, Paragraph, TextRun, Packer, AlignmentType, Header, Footer, PageNumber, Table, TableRow, TableCell, WidthType, ShadingType, BorderStyle } from 'docx';
 import { contractTemplates as t } from '@/constants/contractTemplates';
 import { getDocumentFilename } from '@/utils/documentName';
+import { formatLegalCurrency } from '@/utils/numberToWords';
+import { buildInstallmentTable, formatPaymentDate } from '@/utils/paymentTable';
 
 export async function POST(req: NextRequest) {
     try {
@@ -12,14 +14,63 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Invalid Payload' }, { status: 400 });
         }
 
-        const formatCurrency = (amount: number, currency: string) => {
-            return new Intl.NumberFormat('es-DO', { style: 'currency', currency }).format(amount);
-        };
+        const legalAmount = (amount: number) => formatLegalCurrency(amount, payload.paymentPlan.currency);
+        const formatNumeric = (amount: number) => new Intl.NumberFormat('es-DO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount);
 
         const c = payload.client;
         const p = payload.property;
         const pay = payload.paymentPlan;
         const contractDate = new Date(payload.date || new Date()).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+
+        // Build payment plan table rows
+        const buildPaymentTable = () => {
+            const rows = buildInstallmentTable(pay);
+            const headerBg = { fill: '1a1a2e', color: 'FFFFFF', type: ShadingType.SOLID };
+            const altBg = { fill: 'f9f9f9', color: 'auto', type: ShadingType.SOLID };
+            const lastBg = { fill: 'e8e8e8', color: 'auto', type: ShadingType.SOLID };
+
+            return new Table({
+                width: { size: 100, type: WidthType.PERCENTAGE },
+                rows: [
+                    // Title row
+                    new TableRow({
+                        children: [
+                            new TableCell({
+                                columnSpan: 5,
+                                shading: headerBg,
+                                children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: 'PLAN DE PAGOS', bold: true, color: 'FFFFFF', size: 20 })] })],
+                            })
+                        ]
+                    }),
+                    // Header row
+                    new TableRow({
+                        children: [
+                            new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: 'CONCEPTO', bold: true, size: 16 })] })] }),
+                            new TableCell({ children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: '#', bold: true, size: 16 })] })] }),
+                            new TableCell({ children: [new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: 'IMPORTE', bold: true, size: 16 })] })] }),
+                            new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: 'IMPORTE EN LETRAS', bold: true, size: 16 })] })] }),
+                            new TableCell({ children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: 'FECHA PAGO', bold: true, size: 16 })] })] }),
+                        ]
+                    }),
+                    // Data rows
+                    ...rows.map((row, idx) => {
+                        const isLast = idx === rows.length - 1;
+                        const isAlt = idx % 2 === 1;
+                        const bg = isLast ? lastBg : isAlt ? altBg : undefined;
+                        const cellOpts = (content: Paragraph) => ({ shading: bg, children: [content] });
+                        return new TableRow({
+                            children: [
+                                new TableCell(cellOpts(new Paragraph({ children: [new TextRun({ text: row.label, bold: true, size: 16 })] }))),
+                                new TableCell(cellOpts(new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: String(idx), size: 16 })] }))),
+                                new TableCell(cellOpts(new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: formatNumeric(row.amount), size: 16 })] }))),
+                                new TableCell(cellOpts(new Paragraph({ children: [new TextRun({ text: legalAmount(row.amount), size: 14 })] }))),
+                                new TableCell(cellOpts(new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: formatPaymentDate(row.dueDate), size: 16 })] }))),
+                            ]
+                        });
+                    })
+                ]
+            });
+        };
 
         const renderBeneficiarioParagraph = () => {
             if (c.type === 'Fisica') {
@@ -211,7 +262,7 @@ export async function POST(req: NextRequest) {
                         spacing: { after: 200 },
                         children: [
                             new TextRun(t.TERCERO_BODY_1),
-                            new TextRun({ text: formatCurrency(pay.totalPrice, pay.currency), bold: true }),
+                            new TextRun({ text: legalAmount(pay.totalPrice), bold: true }),
                             new TextRun(t.TERCERO_BODY_2)
                         ]
                     }),
@@ -220,7 +271,7 @@ export async function POST(req: NextRequest) {
                         spacing: { after: 100 },
                         children: [
                             new TextRun({ text: "PAGO DE RESERVA: ", bold: true }),
-                            new TextRun(`${formatCurrency(pay.reservationAmount, pay.currency)}, ${t.TERCERO_RESERVA}`)
+                            new TextRun(`${legalAmount(pay.reservationAmount)}, ${t.TERCERO_RESERVA}`)
                         ]
                     }),
                     new Paragraph({
@@ -228,7 +279,7 @@ export async function POST(req: NextRequest) {
                         spacing: { after: 100 },
                         children: [
                             new TextRun({ text: "PAGO INICIAL: ", bold: true }),
-                            new TextRun(`${formatCurrency(pay.downPaymentAmount, pay.currency)}, ${t.TERCERO_INICIAL}`)
+                            new TextRun(`${legalAmount(pay.downPaymentAmount)}, ${t.TERCERO_INICIAL}`)
                         ]
                     }),
                     new Paragraph({
@@ -243,7 +294,7 @@ export async function POST(req: NextRequest) {
                         spacing: { after: 200 },
                         children: [
                             new TextRun({ text: "SALDO CONTRA ENTREGA: ", bold: true }),
-                            new TextRun(`${formatCurrency(pay.deliveryAmount, pay.currency)}, ${t.TERCERO_ENTREGA}`)
+                            new TextRun(`${legalAmount(pay.deliveryAmount)}, ${t.TERCERO_ENTREGA}`)
                         ]
                     }),
                     new Paragraph({
@@ -304,6 +355,9 @@ export async function POST(req: NextRequest) {
                             new TextRun(t.TERCERO_PARRAFO_VIII)
                         ]
                     }),
+                    // PLAN DE PAGOS TABLE
+                    buildPaymentTable(),
+                    new Paragraph({ children: [], spacing: { after: 200 } }), // spacer
                     new Paragraph({
                         spacing: { before: 200, after: 200 },
                         children: [

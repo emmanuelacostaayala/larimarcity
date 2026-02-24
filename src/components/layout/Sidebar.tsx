@@ -1,7 +1,12 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { LayoutDashboard, FileText, Settings, FilePlus } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export default function Sidebar() {
+    const pathname = usePathname();
     const navItems = [
         { label: 'Dashboard', href: '/', icon: LayoutDashboard },
         { label: 'New Contract', href: '/contracts/new', icon: FilePlus },
@@ -17,11 +22,18 @@ export default function Sidebar() {
             <nav className="flex-1 p-4 space-y-2">
                 {navItems.map((item) => {
                     const Icon = item.icon;
+                    const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+
                     return (
                         <Link
                             key={item.href}
                             href={item.href}
-                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-all font-medium"
+                            className={cn(
+                                "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all font-medium",
+                                isActive
+                                    ? "bg-primary text-primary-foreground shadow-sm"
+                                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                            )}
                         >
                             <Icon size={20} />
                             {item.label}

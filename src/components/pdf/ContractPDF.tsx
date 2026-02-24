@@ -2,6 +2,8 @@ import React from 'react';
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 import { ContractPayload } from '@/types/contract';
 import { contractTemplates as t } from '@/constants/contractTemplates';
+import { formatLegalCurrency } from '@/utils/numberToWords';
+import { buildInstallmentTable, formatPaymentDate } from '@/utils/paymentTable';
 
 const styles = StyleSheet.create({
     page: {
@@ -60,6 +62,57 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingTop: 10,
     },
+    // Payment table styles
+    tableContainer: {
+        marginTop: 20,
+        marginBottom: 20,
+    },
+    tableTitle: {
+        fontSize: 10,
+        fontFamily: 'Times-Bold',
+        textAlign: 'center',
+        backgroundColor: '#1a1a2e',
+        color: '#ffffff',
+        padding: 6,
+        marginBottom: 0,
+    },
+    tableHeader: {
+        flexDirection: 'row',
+        backgroundColor: '#f0f0f0',
+        borderBottomWidth: 1,
+        borderColor: '#000',
+        borderTopWidth: 1,
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+    },
+    tableRow: {
+        flexDirection: 'row',
+        borderBottomWidth: 0.5,
+        borderColor: '#aaa',
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+    },
+    tableRowAlt: {
+        flexDirection: 'row',
+        backgroundColor: '#f9f9f9',
+        borderBottomWidth: 0.5,
+        borderColor: '#aaa',
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+    },
+    tableLastRow: {
+        flexDirection: 'row',
+        borderBottomWidth: 1,
+        borderColor: '#000',
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+        backgroundColor: '#e8e8e8',
+    },
+    cellConcepto: { width: '18%', padding: 3, fontSize: 8, fontFamily: 'Times-Bold' },
+    cellNum: { width: '5%', padding: 3, fontSize: 8, textAlign: 'center', borderLeftWidth: 0.5, borderColor: '#aaa' },
+    cellImporte: { width: '15%', padding: 3, fontSize: 8, textAlign: 'right', borderLeftWidth: 0.5, borderColor: '#aaa' },
+    cellWords: { width: '47%', padding: 3, fontSize: 7.5, borderLeftWidth: 0.5, borderColor: '#aaa' },
+    cellFecha: { width: '15%', padding: 3, fontSize: 8, textAlign: 'center', borderLeftWidth: 0.5, borderColor: '#aaa' },
     pageBreak: { break: true }
 });
 
@@ -68,13 +121,46 @@ interface ContractPDFProps {
 }
 
 export const ContractPDF = ({ payload }: ContractPDFProps) => {
-    const formatCurrency = (amount: number, currency: string) => {
-        return new Intl.NumberFormat('es-DO', { style: 'currency', currency }).format(amount);
-    };
-
     const c = payload.client;
     const p = payload.property;
     const pay = payload.paymentPlan;
+
+    const formatNumeric = (amount: number) =>
+        new Intl.NumberFormat('es-DO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount);
+
+    const legalAmount = (amount: number) => formatLegalCurrency(amount, pay.currency);
+
+    const renderPaymentTable = () => {
+        const rows = buildInstallmentTable(pay);
+        return (
+            <View style={styles.tableContainer}>
+                <Text style={styles.tableTitle}>PLAN DE PAGOS</Text>
+                {/* Header */}
+                <View style={styles.tableHeader}>
+                    <Text style={[styles.cellConcepto, { fontFamily: 'Times-Bold' }]}>CONCEPTO</Text>
+                    <Text style={[styles.cellNum, { fontFamily: 'Times-Bold', borderLeftWidth: 0.5, borderColor: '#aaa' }]}>#</Text>
+                    <Text style={[styles.cellImporte, { fontFamily: 'Times-Bold', borderLeftWidth: 0.5, borderColor: '#aaa' }]}>IMPORTE</Text>
+                    <Text style={[styles.cellWords, { fontFamily: 'Times-Bold', borderLeftWidth: 0.5, borderColor: '#aaa' }]}>IMPORTE EN LETRAS</Text>
+                    <Text style={[styles.cellFecha, { fontFamily: 'Times-Bold', borderLeftWidth: 0.5, borderColor: '#aaa' }]}>FECHA PAGO</Text>
+                </View>
+                {/* Rows */}
+                {rows.map((row, idx) => {
+                    const isLast = idx === rows.length - 1;
+                    const isAlt = idx % 2 === 1;
+                    const rowStyle = isLast ? styles.tableLastRow : isAlt ? styles.tableRowAlt : styles.tableRow;
+                    return (
+                        <View key={idx} style={rowStyle}>
+                            <Text style={styles.cellConcepto}>{row.label}</Text>
+                            <Text style={styles.cellNum}>{idx}</Text>
+                            <Text style={styles.cellImporte}>{formatNumeric(row.amount)}</Text>
+                            <Text style={styles.cellWords}>{legalAmount(row.amount)}</Text>
+                            <Text style={styles.cellFecha}>{formatPaymentDate(row.dueDate)}</Text>
+                        </View>
+                    );
+                })}
+            </View>
+        );
+    };
 
     const contractDate = new Date(payload.date || new Date()).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     const day = new Date(payload.date || new Date()).getDate();
@@ -161,16 +247,16 @@ export const ContractPDF = ({ payload }: ContractPDFProps) => {
 
                 <Text style={styles.subtitle}>{t.TERCERO_TITLE}</Text>
                 <Text style={styles.paragraph}>
-                    {t.TERCERO_BODY_1}<Text style={styles.bold}>{formatCurrency(pay.totalPrice, pay.currency)}</Text>{t.TERCERO_BODY_2}
+                    {t.TERCERO_BODY_1}<Text style={styles.bold}>{legalAmount(pay.totalPrice)}</Text>{t.TERCERO_BODY_2}
                 </Text>
                 {!pay.isCash && (
                     <>
-                        <Text style={styles.paragraph}>La suma de <Text style={styles.bold}>{formatCurrency(pay.reservationAmount || 0, pay.currency)}</Text>, {t.TERCERO_RESERVA}</Text>
-                        <Text style={styles.paragraph}>La suma de <Text style={styles.bold}>{formatCurrency(pay.downPaymentAmount || 0, pay.currency)}</Text>, {t.TERCERO_INICIAL}</Text>
+                        <Text style={styles.paragraph}>La suma de <Text style={styles.bold}>{legalAmount(pay.reservationAmount || 0)}</Text>, {t.TERCERO_RESERVA}</Text>
+                        <Text style={styles.paragraph}>La suma de <Text style={styles.bold}>{legalAmount(pay.downPaymentAmount || 0)}</Text>, {t.TERCERO_INICIAL}</Text>
                     </>
                 )}
                 <Text style={styles.paragraph}>{t.TERCERO_WARNING}</Text>
-                <Text style={styles.paragraph}>Un último pago de <Text style={styles.bold}>{formatCurrency(pay.deliveryAmount || 0, pay.currency)}</Text>, {t.TERCERO_ENTREGA}</Text>
+                <Text style={styles.paragraph}>Un último pago de <Text style={styles.bold}>{legalAmount(pay.deliveryAmount || 0)}</Text>, {t.TERCERO_ENTREGA}</Text>
                 <Text style={styles.paragraph}>{t.TERCERO_PARRAFO_I}</Text>
                 <Text style={styles.paragraph}>{t.TERCERO_PARRAFO_II}</Text>
                 <Text style={styles.paragraph}>{t.TERCERO_PARRAFO_III}</Text>
@@ -182,6 +268,9 @@ export const ContractPDF = ({ payload }: ContractPDFProps) => {
                 </Text>
                 {renderBankDetails()}
                 <Text style={styles.paragraph}>{t.TERCERO_PARRAFO_VIII}</Text>
+
+                {/* PLAN DE PAGOS TABLE */}
+                {renderPaymentTable()}
 
                 <Text style={styles.subtitle}>{t.CUARTO_TITLE}</Text>
                 <Text style={styles.paragraph}>{t.CUARTO_BODY}</Text>
