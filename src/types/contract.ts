@@ -1,61 +1,69 @@
-export type ClientType = 'PERSONA_FISICA' | 'SOCIEDAD';
+export type PartyType = 'Fisica' | 'Sociedad';
+
+export interface BaseParty {
+  type: PartyType;
+  name: string;
+  email?: string;
+  phone?: string;
+  address: string;
+}
+
+export interface PhysicalPerson extends BaseParty {
+  type: 'Fisica';
+  documentType: 'Pasaporte' | 'DNI' | 'Cedula';
+  documentNumber: string;
+  civilStatus: 'Soltero' | 'Casado' | 'Divorciado' | 'Viudo';
+  nationality: string;
+}
+
+export interface Company extends BaseParty {
+  type: 'Sociedad';
+  rncCif: string; // RNC for DO, CIF for ES, etc.
+  legalRepresentative: PhysicalPerson;
+  constitutionData: string; // Registry info
+}
+
+export type Party = PhysicalPerson | Company;
+
 export type Currency = 'EUR' | 'USD';
-export type ProjectType = 'PRIME_TOWERS' | 'BREEZE_TOWERS' | 'TOWNHOUSES';
 
-export interface PersonClient {
-  type: 'PERSONA_FISICA';
-  fullName: string;
-  passportOrDni: string;
-  civilStatus: string;
-  address: string;
-  email: string;
-  phone: string;
-}
-
-export interface CompanyClient {
-  type: 'SOCIEDAD';
-  companyName: string;
-  rncOrCif: string;
-  legalRepresentative: string;
-  representativeId: string;
-  address: string;
-  email: string;
-  phone: string;
-}
-
-export type Client = PersonClient | CompanyClient;
-
-export interface PropertyDetails {
-  project: ProjectType;
+export interface Property {
+  project: 'Prime Towers' | 'Breeze Towers' | 'Townhouses' | string;
   unitNumber: string;
-  level: string;
+  level: string | number;
   squareMeters: number;
-  bedrooms: number;
+  rooms: number;
   bathrooms: number;
+  parkingSpaces?: number;
+}
+
+export interface Installment {
+  amount: number;
+  dueDate: string; // ISO date or description
+  description?: string;
 }
 
 export interface PaymentPlan {
-  isUpfront: boolean; // If true, skip quotas and generate single payment clause
   currency: Currency;
   totalPrice: number;
-  // Below fields are required if isUpfront is false
-  reserveAmount?: number;
-  initialAmount?: number;
-  monthlyQuotasCount?: number;
-  monthlyQuotaAmount?: number;
-  deliveryBalance?: number;
+  isCash: boolean;
+  reservationAmount: number;
+  downPaymentAmount: number;
+  installments: Installment[];
+  deliveryAmount: number; // Saldo Contra Entrega
 }
 
 export interface SpecialClauses {
-  earlyPaymentInterest: boolean; // if true, inflates text with 7% annual interest clause for early payment
-  golfMembership: boolean; // if true, includes golf club membership text and table
+  earlyPaymentInterest: boolean; // pago_anticipado -> 7% annual
+  golfMembership: boolean;
+  qualityMemory: boolean; // Annex
 }
 
-export interface ContractData {
-  contractId: string;
-  contractDate: string; // YYYY-MM-DD
-  client: Client;
-  property: PropertyDetails;
-  payment: PaymentPlan;
+export interface ContractPayload {
+  contractId?: string;
+  date: string; // ISO Date
+  client: Party;
+  property: Property;
+  paymentPlan: PaymentPlan;
   clauses: SpecialClauses;
 }
