@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ContractPayload } from '@/types/contract';
 import { Document, Paragraph, TextRun, Packer, AlignmentType, Header, Footer, PageNumber } from 'docx';
+import { contractTemplates as t } from '@/constants/contractTemplates';
 
 export async function POST(req: NextRequest) {
     try {
@@ -90,19 +91,14 @@ export async function POST(req: NextRequest) {
                         alignment: AlignmentType.CENTER,
                         spacing: { before: 400, after: 400 },
                         children: [
-                            new TextRun({ text: "CONTRATO DE OPCIÓN DE COMPRAVENTA DE INMUEBLE", bold: true, size: 24 })
+                            new TextRun({ text: t.TITLE, bold: true, size: 24 })
                         ]
                     }),
                     new Paragraph({
                         alignment: AlignmentType.JUSTIFIED,
                         spacing: { after: 200 },
                         children: [
-                            new TextRun({ text: "ENTRE: ", bold: true }),
-                            new TextRun("Por una parte "),
-                            new TextRun({ text: "INGENIERÍA Y ESTRUCTURAS DEL CARIBE -INECAR SRL", bold: true }),
-                            new TextRun(", sociedad comercial organizada y existente de conformidad con las leyes de la República Dominicana, Registro Mercantil número 15387LA, y Registro Nacional de Contribuyentes (RNC) número 1-32-43471-4, con domicilio social establecido en el Boulevard Primero de Noviembre No. 801, Aqua Business Center, Punta Cana Village, Punta Cana, provincia La Altagracia R.D., representada por el señor "),
-                            new TextRun({ text: "ÁLVARO MECA RUBIO", bold: true }),
-                            new TextRun(", apoderado en virtud de acta de asamblea de fecha 2 de julio del año 2025, de nacionalidad española, mayor de edad, soltero, abogado, portador del pasaporte No. PAU716840, y D.N.I. y N.I.F. No. 23.835.758-F, domiciliado y residente en el residencial Punta Cana Village, Punta Cana, provincia la Altagracia, República Dominicana, quien en lo adelante del presente contrato se denominará, ”EL PROPIETARIO”, o por su propio nombre.")
+                            new TextRun({ text: t.PARTIES_INTRO })
                         ]
                     }),
                     renderBeneficiarioParagraph(),
@@ -110,35 +106,55 @@ export async function POST(req: NextRequest) {
                         alignment: AlignmentType.JUSTIFIED,
                         spacing: { after: 200 },
                         children: [
-                            new TextRun("Cuando EL PROPIETARIO y EL BENEFICIARIO sean designados de manera conjunta en el presente contrato, se les denominarán como “LAS PARTES”.")
+                            new TextRun(t.DEFINITIONS)
                         ]
                     }),
                     new Paragraph({
                         alignment: AlignmentType.CENTER,
                         spacing: { before: 200, after: 200 },
                         children: [
-                            new TextRun({ text: "P R E Á M B U L O", bold: true, size: 20 })
+                            new TextRun({ text: t.PREAMBULO_TITLE, bold: true, size: 20 })
                         ]
                     }),
                     new Paragraph({
                         alignment: AlignmentType.JUSTIFIED,
                         spacing: { after: 200 },
                         children: [
-                            new TextRun({ text: "POR CUANTO (1): ", bold: true }),
-                            new TextRun("EL PROPIETARIO es promotora de un proyecto turístico hotelero denominado “LARIMAR CITY & RESORT”, el cual se desarrollará en los inmuebles identificados como: 1) Parcela No. 67-B247, Distrito Catastral No. 11/3ra., Certificado de Título No. 95-313 con un área de 2,548,943.50 Mts.2; 2) 3000537221, Parcela No. 67-B, Distrito Catastral No. 11/3ra... [El proyecto contará con un paseo estilo mediterráneo al borde del farallón de Higüey...]")
+                            new TextRun(t.POR_CUANTO_1),
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.POR_CUANTO_2A),
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.POR_CUANTO_3),
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.POR_CUANTO_4),
                         ]
                     }),
                     new Paragraph({
                         spacing: { before: 200, after: 200 },
                         children: [
-                            new TextRun({ text: "PRIMERO: OBJETO DEL CONTRATO.", bold: true, size: 20 })
+                            new TextRun({ text: t.PRIMERO_TITLE, bold: true, size: 20 })
                         ]
                     }),
                     new Paragraph({
                         alignment: AlignmentType.JUSTIFIED,
                         spacing: { after: 200 },
                         children: [
-                            new TextRun("EL PROPIETARIO, por medio del presente contrato le da formal opción de compra con todas las garantías ordinarias y de derecho, a EL BENEFICIARIO, el cual acepta, libre de cargas, gravámenes y todo tipo de deuda, y a su vez se compromete a pagar, dentro del proyecto “LARIMAR CITY & RESORT”, el inmueble que comercialmente se describe a continuación:")
+                            new TextRun(t.PRIMERO_BODY)
                         ]
                     }),
                     new Paragraph({
@@ -150,18 +166,52 @@ export async function POST(req: NextRequest) {
                         ]
                     }),
                     new Paragraph({
-                        spacing: { before: 200, after: 200 },
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
                         children: [
-                            new TextRun({ text: "TERCERO: DEL PRECIO Y LA FORMA DE PAGO.", bold: true, size: 20 })
+                            new TextRun(t.PRIMERO_PARRAFO_I)
                         ]
                     }),
                     new Paragraph({
                         alignment: AlignmentType.JUSTIFIED,
                         spacing: { after: 200 },
                         children: [
-                            new TextRun("El precio total convenido y pactado por LAS PARTES para la presente OPCIÓN DE COMPRA es por la cantidad de "),
+                            new TextRun(t.PRIMERO_PARRAFO_II)
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.PRIMERO_PARRAFO_III)
+                        ]
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.SEGUNDO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.SEGUNDO_BODY)
+                        ]
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.TERCERO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.TERCERO_BODY_1),
                             new TextRun({ text: formatCurrency(pay.totalPrice, pay.currency), bold: true }),
-                            new TextRun(", el cual será pagado en la cuenta de EL PROPIETARIO según el siguiente plan de pagos:")
+                            new TextRun(t.TERCERO_BODY_2)
                         ]
                     }),
                     new Paragraph({
@@ -169,7 +219,7 @@ export async function POST(req: NextRequest) {
                         spacing: { after: 100 },
                         children: [
                             new TextRun({ text: "PAGO DE RESERVA: ", bold: true }),
-                            new TextRun(`${formatCurrency(pay.reservationAmount, pay.currency)}, monto que EL PROPIETARIO declara haber recibido en fechas anteriores.`)
+                            new TextRun(`${formatCurrency(pay.reservationAmount, pay.currency)}, ${t.TERCERO_RESERVA}`)
                         ]
                     }),
                     new Paragraph({
@@ -177,7 +227,14 @@ export async function POST(req: NextRequest) {
                         spacing: { after: 100 },
                         children: [
                             new TextRun({ text: "PAGO INICIAL: ", bold: true }),
-                            new TextRun(`${formatCurrency(pay.downPaymentAmount, pay.currency)}, monto que EL BENEFICIARIO depositará en la cuenta de EL PROPIETARIO.`)
+                            new TextRun(`${formatCurrency(pay.downPaymentAmount, pay.currency)}, ${t.TERCERO_INICIAL}`)
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.TERCERO_WARNING)
                         ]
                     }),
                     new Paragraph({
@@ -185,7 +242,388 @@ export async function POST(req: NextRequest) {
                         spacing: { after: 200 },
                         children: [
                             new TextRun({ text: "SALDO CONTRA ENTREGA: ", bold: true }),
-                            new TextRun(`${formatCurrency(pay.deliveryAmount, pay.currency)}, lo cual equivale al saldo restante del monto total de la vivienda y que serán cancelados con la entrega del apartamento.`)
+                            new TextRun(`${formatCurrency(pay.deliveryAmount, pay.currency)}, ${t.TERCERO_ENTREGA}`)
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.TERCERO_PARRAFO_I)
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.TERCERO_PARRAFO_II)
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.TERCERO_PARRAFO_III)
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.TERCERO_PARRAFO_IV)
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.TERCERO_PARRAFO_V)
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.TERCERO_PARRAFO_VI)
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.TERCERO_PARRAFO_VII_A),
+                            new TextRun(pay.currency === 'EUR' ? 'euros (€)' : 'Dólares (USD)'),
+                            new TextRun(t.TERCERO_PARRAFO_VII_B)
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.TERCERO_PARRAFO_VIII)
+                        ]
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.CUARTO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.CUARTO_BODY)
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.CUARTO_PARRAFO_I)
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.CUARTO_PARRAFO_II)
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.CUARTO_PARRAFO_III)
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.CUARTO_PARRAFO_IV)
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.CUARTO_PARRAFO_V)
+                        ]
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.QUINTO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.QUINTO_BODY)
+                        ]
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.SEXTO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.SEXTO_BODY)
+                        ]
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.SEPTIMO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.SEPTIMO_BODY)
+                        ]
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.OCTAVO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.OCTAVO_BODY)
+                        ]
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.NOVENO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.NOVENO_BODY)
+                        ]
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.DECIMO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.DECIMO_BODY)
+                        ]
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.UNDECIMO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.UNDECIMO_BODY),
+                            new TextRun(` ${p.squareMeters} `),
+                            new TextRun(t.UNDECIMO_BODY_B)
+                        ]
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.DUODECIMO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.DUODECIMO_BODY)
+                        ]
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.D_TERCERO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.D_TERCERO_BODY)
+                        ]
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.D_CUARTO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.D_CUARTO_BODY)
+                        ]
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.D_QUINTO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.D_QUINTO_BODY)
+                        ]
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.D_SEXTO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.D_SEXTO_BODY)
+                        ]
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.D_SEPTIMO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.D_SEPTIMO_BODY)
+                        ]
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.D_OCTAVO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.D_OCTAVO_BODY)
+                        ]
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.D_NOVENO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.D_NOVENO_BODY)
+                        ]
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.VIGESIMO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.VIGESIMO_BODY)
+                        ]
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.VIGESIMO_PRIMERO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.VIGESIMO_PRIMERO_BODY)
+                        ]
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.VIGESIMO_SEGUNDO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.VIGESIMO_SEGUNDO_BODY)
+                        ]
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.VIGESIMO_TERCERO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.VIGESIMO_TERCERO_BODY)
+                        ]
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.VIGESIMO_CUARTO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.VIGESIMO_CUARTO_BODY)
+                        ]
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200, after: 200 },
+                        children: [
+                            new TextRun({ text: t.VIGESIMO_QUINTO_TITLE, bold: true, size: 20 })
+                        ]
+                    }),
+                    new Paragraph({
+                        alignment: AlignmentType.JUSTIFIED,
+                        spacing: { after: 200 },
+                        children: [
+                            new TextRun(t.VIGESIMO_QUINTO_BODY)
                         ]
                     }),
                     new Paragraph({
