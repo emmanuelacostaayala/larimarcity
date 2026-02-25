@@ -543,12 +543,6 @@ export async function generateDocxBuffer(payload: ContractPayload): Promise<Uint
                             new TextRun(t.D_CUARTO_BODY)
                         ]
                     }),
-                    new Paragraph({
-                        spacing: { before: 200, after: 200 },
-                        children: [
-                            new TextRun({ text: t.D_QUINTO_TITLE, bold: true, size: 20 })
-                        ]
-                    }),
                     ...(payload.clauses.earlyPaymentInterest ? [
                         new Paragraph({
                             spacing: { before: 200, after: 200 },
