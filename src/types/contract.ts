@@ -45,7 +45,9 @@ export interface Installment {
 
 export interface PaymentPlan {
   currency: Currency;
-  totalPrice: number;
+  basePrice?: number;             // Original list price before discount (optional)
+  totalPrice: number;            // Final negotiated price
+  exchangeRate?: number;          // Forex rate to USD if currency is EUR (optional)
   isCash: boolean;
   reservationAmount: number;
   reservationDate?: string;       // ISO date for reservation payment

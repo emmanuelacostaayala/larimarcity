@@ -1,0 +1,109 @@
+K1: RNC.: 130-23033-1
+L8: 46069
+A9: Solicitud de Seguro de fianzas
+L9: true
+F10: Fecha 
+H10: 6
+I10: 1
+J10: 2026
+H11: Dia
+I11: Mes
+J11: Año
+A14: Código del cliente
+E14:    Número de póliza
+A16: Nombre del solicitante
+C16: INGENIERIA Y ESTRUCTURAS DEL CARIBE INECAR SRL
+A18: Cédula
+E18:    RNC
+F18: 1-32-43471-4
+A20: Dirección
+C20: AVDA. EUROPA 3B ENTREPISO 1
+A22: Teléfono
+C22: 809 757 2163 
+F22: Giro del Negocio
+A24: Vigencia
+B24: Inicio
+C24: 45994
+E24:    Vencimiento
+F24: 46568
+A26: Tipo de fianza solicitada
+A27: Aduanales
+D27: Construcción
+F27:    Comerciales/Garantía
+A35: Datos de (los) fiador(es) solidario(s)
+A36: I. Nombre del fiador
+C36: CLERHP ESTRUCTURAS SA
+F36:   II. Nombre del fiador
+A38: Profesión u ocupación
+C38: INGENIERIA
+F38:   Profesión u Ucupación
+A40: Cédula
+F40:   Cédula
+A42: RNC
+C42: A-30859755
+F42:   RNC
+A44: Firma
+F44:   Firma
+A46: Datos de la fianza solicitada
+A47: 1. Para depositar en beneficio de
+D47: YARELIS RABEIRO HERNANDEZ PASAPORTE PA0586941
+A49: 2. Solicitamos una fianza por valor de USD
+D49: 87172.04
+F49: 0.5
+H49: 174344.08
+A52: 3. La fianza correspondiente es para responder a las obligaciones siguientes:
+A53: Garantizar el Buen Uso del Avanco o Anticipo por el Contrato de Opcion de Compraventa de Inmueble "Descripcion del Inmueble 
+A54: PARADISE Torre 3,  Apto.503, Cant114,53 Mts2, Cant. 2 Hab, Piso 5 Valor 174,344.08 USD, Ubicado en Proyecto LARIMAR CITY & RESORT)"
+A56: Observaciones
+A58: Datos generales del contratista
+A59: 1. Fecha de constitución de la empresa o contratista
+E59: 2. Años de experiencia en construcciones similares
+I59: 3. ¿Tiene alguna limitación o propuesta pendiente?
+A60: 19 DE JULIO DE 2021
+E60: 11
+A62: 4. Indique las obras que tiene en ejecución a la fecha, valor y porcentaje construido.
+A65: 5. Indique las obras similares en que ha participado (si es necesario anexe relación)
+A67: 6. ¿Ha sido cancelado algún contrato en ejecución?
+F67: En caso afirmativo indique el monto y el detalle
+A69: 7. ¿Ha sido penalizado o sancionado por el incumplimiento de un contrato?
+G69: En caso afirmativo indique el monto y el detalle
+A72: 8. ¿Quiénes son los principales funcionarios responsables de este proyecto y que experiencia tienen?
+H74: Prima RD$:
+A76: Datos para otras fianzas
+A77: 1. ¿Tiene vigentes otras fianzas de construcción, aduanales o de garantía?
+G77: En caso afirmativo indique montos y cuáles compañías.
+A79: 2. Para fianzas de suministro, favor indicar nombre y dirección de sus abastecedores.
+A81: 3. Para todas las fianzas, favor anexar (tanto para el solicitante como el fiador):
+A83: Estudios financieros de los últimos tres años
+A85: Referencias bancarias
+A87: Referencias comerciales
+C87:   Fianzas de construcción
+A89: Copia del contrato
+A91: Formulario del contrato
+A93: Formulario 3496 (solo para fianzas aduanales)
+A95: Sentencia y apelación (solo para fianzas de levantamiento de embargo)
+A97: Declaración
+A98: Garantizo la veracidad de las declaraciones hechas en esta solicitud y declaro no haber ocultado ninguna información que pudiera aumentar el riesgo de la compañia aseguradora
+A99: o influencia para que acepte  mi solicitud, convengo en aceptar una póliza sujeta  a las  condiciones impresas usuales  y  otras condiciones que  se  agreguen por medio de endosos,
+A100: en el entendido de que las informaciones aquí suministradas constituirán la base de dichas pólizas,convengo además, en que el contrato no entrará en vigor hasta que la compañía
+A101: expida la póliza, se haya pagado la prima y emitido  el recibo oficial  correspondiente.  Esta solicitud forma parte integrante de la póliza.  Al suscribir la presente solicitud me (nos)
+A102: comprometo(emos) y  obligo(amos), en  el caso de que  la misma fuere acogida, a reembolsar a Atrio Seguro, S.A.  a su  primer requerimiento, cualesquiera  valores que, a
+A103: cualquier título, ella se  viere obligada a  pagar en ejecución, parcial o  total, de la fianza emitida, constituyendo dichos pagos, a los cuales presto(amos) por  ese medio  formal  y
+A104: previa aprobación,un crédito cierto, líquido y exigible a mi (nuestro) cargo y afectando todos mis (nuestros) bienes, presentes y futuros, como garantía para el pago de dicha deuda
+A105: y de manera  especial  presentando por  este  mismo documento  como  fiador(es)  solidario(s)  de  la misma  con  renuncia a la  previa exclusión a los señores  que  abajo afirman
+A106: conjuntamente conmigo (con) nosotros) solidario(s). El compromiso que los suscribientes asumen con esta solicitud será extensivo no  solamente respecto de la fianza que se emita
+A107: originalmente, sino tambien sobre cualesquiera extensiones de vigencia o renovaciones que puedieren expedirse de la misma y para los fines y en las condiciones aqui indicadas.
+A109: INGENIERIA Y ESTRUCTURAS DEL CARIBE
+A110:                INECAR SRL
+A112: Pedro Jose Romero Hernandez
+E112: Punta Cana 
+A113: Firma(s) solicitante(s) si es persona moral
+E113: Ciudad
+J113: Firma intermediario y código
+A116: CLERHP ESTRUCTURAS SA
+A118: Juan Andres Romero
+A119: Firma del fiador solicitante
+A121: Uso interno
+A122: Comisión intermediario:
+C122: %
+A124: Observaciones

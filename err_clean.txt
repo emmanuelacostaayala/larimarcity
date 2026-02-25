@@ -1,0 +1,220 @@
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+Error: Prisma schema validation - (get-dmmf wasm)
+Error code: P1012
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `liner_id` in the model `data_entry_asignacionpropiedad` is not matching the type of the referenced field `id` in model `data_entry_liner`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:107[0m
+[1;94m   | [0m
+[1;94m106 | [0m  liner_id             BigInt?
+[1;94m107 | [0m  [1;91mdata_entry_liner     data_entry_liner?    @relation(fields: [liner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m108 | [0m  data_entry_propiedad data_entry_propiedad @relation(fields: [propiedad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `propiedad_id` in the model `data_entry_asignacionpropiedad` is not matching the type of the referenced field `id` in model `data_entry_propiedad`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:108[0m
+[1;94m   | [0m
+[1;94m107 | [0m  data_entry_liner     data_entry_liner?    @relation(fields: [liner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m108 | [0m  [1;91mdata_entry_propiedad data_entry_propiedad @relation(fields: [propiedad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m109 | [0m  data_entry_broker    data_entry_broker?   @relation(fields: [broker_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `broker_id` in the model `data_entry_asignacionpropiedad` is not matching the type of the referenced field `id` in model `data_entry_broker`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:109[0m
+[1;94m   | [0m
+[1;94m108 | [0m  data_entry_propiedad data_entry_propiedad @relation(fields: [propiedad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m109 | [0m  [1;91mdata_entry_broker    data_entry_broker?   @relation(fields: [broker_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m110 | [0m
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `liner_id` in the model `data_entry_asignacionproyecto` is not matching the type of the referenced field `id` in model `data_entry_liner`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:131[0m
+[1;94m   | [0m
+[1;94m130 | [0m  liner_id                                                                     BigInt?
+[1;94m131 | [0m  [1;91mdata_entry_liner                                                             data_entry_liner?   @relation(fields: [liner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m132 | [0m  data_entry_closer_data_entry_asignacionproyecto_kam_idTodata_entry_closer    data_entry_closer?  @relation("data_entry_asignacionproyecto_kam_idTodata_entry_closer", fields: [kam_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `kam_id` in the model `data_entry_asignacionproyecto` is not matching the type of the referenced field `id` in model `data_entry_closer`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:132[0m
+[1;94m   | [0m
+[1;94m131 | [0m  data_entry_liner                                                             data_entry_liner?   @relation(fields: [liner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m132 | [0m  [1;91mdata_entry_closer_data_entry_asignacionproyecto_kam_idTodata_entry_closer    data_entry_closer?  @relation("data_entry_asignacionproyecto_kam_idTodata_entry_closer", fields: [kam_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m133 | [0m  data_entry_closer_data_entry_asignacionproyecto_closer_idTodata_entry_closer data_entry_closer?  @relation("data_entry_asignacionproyecto_closer_idTodata_entry_closer", fields: [closer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `closer_id` in the model `data_entry_asignacionproyecto` is not matching the type of the referenced field `id` in model `data_entry_closer`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:133[0m
+[1;94m   | [0m
+[1;94m132 | [0m  data_entry_closer_data_entry_asignacionproyecto_kam_idTodata_entry_closer    data_entry_closer?  @relation("data_entry_asignacionproyecto_kam_idTodata_entry_closer", fields: [kam_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m133 | [0m  [1;91mdata_entry_closer_data_entry_asignacionproyecto_closer_idTodata_entry_closer data_entry_closer?  @relation("data_entry_asignacionproyecto_closer_idTodata_entry_closer", fields: [closer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m134 | [0m  data_entry_proyecto                                                          data_entry_proyecto @relation(fields: [proyecto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `proyecto_id` in the model `data_entry_asignacionproyecto` is not matching the type of the referenced field `id` in model `data_entry_proyecto`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:134[0m
+[1;94m   | [0m
+[1;94m133 | [0m  data_entry_closer_data_entry_asignacionproyecto_closer_idTodata_entry_closer data_entry_closer?  @relation("data_entry_asignacionproyecto_closer_idTodata_entry_closer", fields: [closer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m134 | [0m  [1;91mdata_entry_proyecto                                                          data_entry_proyecto @relation(fields: [proyecto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m135 | [0m  data_entry_broker                                                            data_entry_broker?  @relation(fields: [broker_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `broker_id` in the model `data_entry_asignacionproyecto` is not matching the type of the referenced field `id` in model `data_entry_broker`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:135[0m
+[1;94m   | [0m
+[1;94m134 | [0m  data_entry_proyecto                                                          data_entry_proyecto @relation(fields: [proyecto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m135 | [0m  [1;91mdata_entry_broker                                                            data_entry_broker?  @relation(fields: [broker_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m136 | [0m
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `closer_id` in the model `data_entry_broker` is not matching the type of the referenced field `id` in model `data_entry_closer`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:159[0m
+[1;94m   | [0m
+[1;94m158 | [0m  data_entry_asignacionproyecto  data_entry_asignacionproyecto[]
+[1;94m159 | [0m  [1;91mdata_entry_closer              data_entry_closer?               @relation(fields: [closer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m160 | [0m  data_entry_rol                 data_entry_rol?                  @relation(fields: [rol_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `rol_id` in the model `data_entry_broker` is not matching the type of the referenced field `id` in model `data_entry_rol`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:160[0m
+[1;94m   | [0m
+[1;94m159 | [0m  data_entry_closer              data_entry_closer?               @relation(fields: [closer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m160 | [0m  [1;91mdata_entry_rol                 data_entry_rol?                  @relation(fields: [rol_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m161 | [0m  auth_user                      auth_user?                       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `propiedad_id` in the model `data_entry_cliente_propiedades_interesadas` is not matching the type of the referenced field `id` in model `data_entry_propiedad`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:188[0m
+[1;94m   | [0m
+[1;94m187 | [0m  propiedad_id         BigInt
+[1;94m188 | [0m  [1;91mdata_entry_propiedad data_entry_propiedad @relation(fields: [propiedad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m189 | [0m  data_entry_cliente   data_entry_cliente   @relation(fields: [cliente_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `cliente_id` in the model `data_entry_cliente_propiedades_interesadas` is not matching the type of the referenced field `id` in model `data_entry_cliente`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:189[0m
+[1;94m   | [0m
+[1;94m188 | [0m  data_entry_propiedad data_entry_propiedad @relation(fields: [propiedad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m189 | [0m  [1;91mdata_entry_cliente   data_entry_cliente   @relation(fields: [cliente_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m190 | [0m
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `reserva_id` in the model `data_entry_detalleplanpago` is not matching the type of the referenced field `id` in model `data_entry_reserva`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:219[0m
+[1;94m   | [0m
+[1;94m218 | [0m  reserva_id         BigInt
+[1;94m219 | [0m  [1;91mdata_entry_reserva data_entry_reserva @relation(fields: [reserva_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m220 | [0m
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `propiedad_id` in the model `data_entry_formularioreserva` is not matching the type of the referenced field `id` in model `data_entry_propiedad`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:281[0m
+[1;94m   | [0m
+[1;94m280 | [0m  propiedad_id                                                    BigInt?
+[1;94m281 | [0m  [1;91mdata_entry_propiedad                                            data_entry_propiedad? @relation(fields: [propiedad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m282 | [0m  auth_user_data_entry_formularioreserva_creado_por_idToauth_user auth_user?            @relation("data_entry_formularioreserva_creado_por_idToauth_user", fields: [creado_por_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `propiedad_id` in the model `data_entry_historialpropiedad` is not matching the type of the referenced field `id` in model `data_entry_propiedad`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:309[0m
+[1;94m   | [0m
+[1;94m308 | [0m  auth_user            auth_user            @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m309 | [0m  [1;91mdata_entry_propiedad data_entry_propiedad @relation(fields: [propiedad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m310 | [0m
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `closer_id` in the model `data_entry_liner` is not matching the type of the referenced field `id` in model `data_entry_closer`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:330[0m
+[1;94m   | [0m
+[1;94m329 | [0m  data_entry_asignacionproyecto  data_entry_asignacionproyecto[]
+[1;94m330 | [0m  [1;91mdata_entry_closer              data_entry_closer?               @relation(fields: [closer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m331 | [0m  data_entry_broker              data_entry_broker?               @relation(fields: [broker_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `broker_id` in the model `data_entry_liner` is not matching the type of the referenced field `id` in model `data_entry_broker`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:331[0m
+[1;94m   | [0m
+[1;94m330 | [0m  data_entry_closer              data_entry_closer?               @relation(fields: [closer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m331 | [0m  [1;91mdata_entry_broker              data_entry_broker?               @relation(fields: [broker_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m332 | [0m  auth_user                      auth_user?                       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `rol_id` in the model `data_entry_liner` is not matching the type of the referenced field `id` in model `data_entry_rol`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:333[0m
+[1;94m   | [0m
+[1;94m332 | [0m  auth_user                      auth_user?                       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m333 | [0m  [1;91mdata_entry_rol                 data_entry_rol?                  @relation(fields: [rol_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m334 | [0m  data_entry_propiedad           data_entry_propiedad[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `liner_id` in the model `data_entry_propiedad` is not matching the type of the referenced field `id` in model `data_entry_liner`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:408[0m
+[1;94m   | [0m
+[1;94m407 | [0m  data_entry_historialpropiedad                               data_entry_historialpropiedad[]
+[1;94m408 | [0m  [1;91mdata_entry_liner                                            data_entry_liner?                            @relation(fields: [liner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m409 | [0m  data_entry_closer                                           data_entry_closer?                           @relation(fields: [closer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `closer_id` in the model `data_entry_propiedad` is not matching the type of the referenced field `id` in model `data_entry_closer`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:409[0m
+[1;94m   | [0m
+[1;94m408 | [0m  data_entry_liner                                            data_entry_liner?                            @relation(fields: [liner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m409 | [0m  [1;91mdata_entry_closer                                           data_entry_closer?                           @relation(fields: [closer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m410 | [0m  auth_user_data_entry_propiedad_reservada_por_idToauth_user  auth_user?                                   @relation("data_entry_propiedad_reservada_por_idToauth_user", fields: [reservada_por_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `proyecto_id` in the model `data_entry_propiedad` is not matching the type of the referenced field `id` in model `data_entry_proyecto`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:412[0m
+[1;94m   | [0m
+[1;94m411 | [0m  auth_user_data_entry_propiedad_autorizado_por_idToauth_user auth_user?                                   @relation("data_entry_propiedad_autorizado_por_idToauth_user", fields: [autorizado_por_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m412 | [0m  [1;91mdata_entry_proyecto                                         data_entry_proyecto?                         @relation(fields: [proyecto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m413 | [0m  data_entry_edificio                                         data_entry_edificio?                         @relation(fields: [edificio_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `edificio_id` in the model `data_entry_propiedad` is not matching the type of the referenced field `id` in model `data_entry_edificio`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:413[0m
+[1;94m   | [0m
+[1;94m412 | [0m  data_entry_proyecto                                         data_entry_proyecto?                         @relation(fields: [proyecto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m413 | [0m  [1;91mdata_entry_edificio                                         data_entry_edificio?                         @relation(fields: [edificio_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m414 | [0m  data_entry_broker                                           data_entry_broker?                           @relation(fields: [broker_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `broker_id` in the model `data_entry_propiedad` is not matching the type of the referenced field `id` in model `data_entry_broker`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:414[0m
+[1;94m   | [0m
+[1;94m413 | [0m  data_entry_edificio                                         data_entry_edificio?                         @relation(fields: [edificio_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m414 | [0m  [1;91mdata_entry_broker                                           data_entry_broker?                           @relation(fields: [broker_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m415 | [0m  data_entry_reserva                                          data_entry_reserva[]
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `liner_id` in the model `data_entry_reserva` is not matching the type of the referenced field `id` in model `data_entry_liner`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:459[0m
+[1;94m   | [0m
+[1;94m458 | [0m  data_entry_detalleplanpago data_entry_detalleplanpago[]
+[1;94m459 | [0m  [1;91mdata_entry_liner           data_entry_liner?            @relation(fields: [liner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m460 | [0m  data_entry_broker          data_entry_broker?           @relation(fields: [broker_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `broker_id` in the model `data_entry_reserva` is not matching the type of the referenced field `id` in model `data_entry_broker`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:460[0m
+[1;94m   | [0m
+[1;94m459 | [0m  data_entry_liner           data_entry_liner?            @relation(fields: [liner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m460 | [0m  [1;91mdata_entry_broker          data_entry_broker?           @relation(fields: [broker_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m461 | [0m  data_entry_propiedad       data_entry_propiedad         @relation(fields: [propiedad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `propiedad_id` in the model `data_entry_reserva` is not matching the type of the referenced field `id` in model `data_entry_propiedad`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:461[0m
+[1;94m   | [0m
+[1;94m460 | [0m  data_entry_broker          data_entry_broker?           @relation(fields: [broker_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m461 | [0m  [1;91mdata_entry_propiedad       data_entry_propiedad         @relation(fields: [propiedad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m462 | [0m  data_entry_cliente         data_entry_cliente           @relation(fields: [cliente_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `cliente_id` in the model `data_entry_reserva` is not matching the type of the referenced field `id` in model `data_entry_cliente`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:462[0m
+[1;94m   | [0m
+[1;94m461 | [0m  data_entry_propiedad       data_entry_propiedad         @relation(fields: [propiedad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m462 | [0m  [1;91mdata_entry_cliente         data_entry_cliente           @relation(fields: [cliente_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m463 | [0m
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `propiedad_id` in the model `data_entry_reservacliente` is not matching the type of the referenced field `id` in model `data_entry_propiedad`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:489[0m
+[1;94m   | [0m
+[1;94m488 | [0m  propiedad_id                                               BigInt?
+[1;94m489 | [0m  [1;91mdata_entry_propiedad                                       data_entry_propiedad? @relation(fields: [propiedad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m490 | [0m  auth_user_data_entry_reservacliente_broker_idToauth_user   auth_user?            @relation("data_entry_reservacliente_broker_idToauth_user", fields: [broker_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `liner_id` in the model `data_entry_reservacompleta` is not matching the type of the referenced field `id` in model `data_entry_liner`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:521[0m
+[1;94m   | [0m
+[1;94m520 | [0m  liner_id             BigInt?
+[1;94m521 | [0m  [1;91mdata_entry_liner     data_entry_liner?               @relation(fields: [liner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m522 | [0m  auth_user            auth_user?                      @relation(fields: [creado_por_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m   | [0m
+[1;91merror[0m: [1mError parsing attribute "@relation": The type of the field `unidad_id` in the model `data_entry_reservacompleta` is not matching the type of the referenced field `id` in model `data_entry_propiedad`.[0m
+  [1;94m-->[0m  [4mprisma\schema.prisma:523[0m
+[1;94m   | [0m
+[1;94m522 | [0m  auth_user            auth_user?                      @relation(fields: [creado_por_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+[1;94m523 | [0m  [1;91mdata_entry_propiedad data_entry_propiedad?           @relation(fields: [unidad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)[0m
+[1;94m524 | [0m
+[1;94m   | [0m
+
+Validation Error Count: 30
+[Context: getDmmf]
+
+Prisma CLI Version : 7.4.1

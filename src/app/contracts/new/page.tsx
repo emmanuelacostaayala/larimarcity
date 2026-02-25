@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Save, Loader2, ArrowLeft, ArrowRight, Check, FileText, Eye, Sparkles } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Eye, FileText, Pickaxe, Save, Loader2, Package, Check, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PartyForm } from '@/components/forms/PartyForm';
 import { PropertyForm } from '@/components/forms/PropertyForm';
@@ -13,6 +13,7 @@ import { useContractStore } from '@/context/ContractStore';
 import { getDocumentFilename } from '@/utils/documentName';
 import { formatLegalCurrency } from '@/utils/numberToWords';
 import { buildInstallmentTable, formatPaymentDate } from '@/utils/paymentTable';
+import { useRouter } from 'next/navigation';
 
 const STEPS = [
     { id: 'client', label: 'Cliente' },
@@ -132,7 +133,8 @@ function ContractPreview({ payload }: { payload: Partial<ContractPayload> }) {
 export default function NewContractPage() {
     const { addContract } = useContractStore();
     const [currentStep, setCurrentStep] = useState(0);
-    const [loadingFormat, setLoadingFormat] = useState<'pdf' | 'docx' | null>(null);
+    const [loadingFormat, setLoadingFormat] = useState<'pdf' | 'zip' | null>(null);
+    const router = useRouter();
 
     const [payload, setPayload] = useState<Partial<ContractPayload>>({
         date: new Date().toISOString(),
@@ -181,10 +183,10 @@ export default function NewContractPage() {
     const handleNext = () => { if (!validateStep()) return; if (currentStep < STEPS.length - 1) setCurrentStep(p => p + 1); };
     const handlePrev = () => { if (currentStep > 0) setCurrentStep(p => p - 1); };
 
-    const handleGenerate = async (format: 'pdf' | 'docx') => {
+    const handleGenerate = async (format: 'pdf' | 'zip') => {
         setLoadingFormat(format);
         try {
-            const endpoint = format === 'pdf' ? '/api/contracts/generate/pdf' : '/api/contracts/generate/docx';
+            const endpoint = format === 'pdf' ? '/api/contracts/generate/pdf' : '/api/contracts/generate';
             const res = await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -193,14 +195,25 @@ export default function NewContractPage() {
             if (!res.ok) throw new Error('API Error');
             const blob = await res.blob();
             const url = window.URL.createObjectURL(blob);
-            const { getDocumentFilename: gdf } = await import('@/utils/documentName');
-            const filename = gdf(payload as ContractPayload, format);
+
+            // Extract filename from header or fallback
+            const contentDisposition = res.headers.get('Content-Disposition');
+            let filename = `Contrato_Larimar_${payload.property?.unitNumber || 'Unidad'}.${format}`;
+            if (contentDisposition) {
+                const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+                if (filenameMatch && filenameMatch[1]) {
+                    filename = filenameMatch[1];
+                }
+            }
+
             const a = document.createElement('a');
             a.href = url; a.download = filename; a.click();
             addContract({ id: crypto.randomUUID(), generatedAt: new Date().toISOString(), payload: payload as ContractPayload, filename, format, blobUrl: url });
-        } catch (err) {
-            console.error(err);
-            alert(`Error al generar ${format.toUpperCase()}`);
+
+            router.push('/');
+        } catch (e) {
+            console.error(e);
+            alert('Error generando documento. Por favor revise la consola.');
         } finally {
             setLoadingFormat(null);
         }
@@ -347,12 +360,12 @@ export default function NewContractPage() {
                         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                             <Button
                                 variant="secondary"
-                                onClick={() => handleGenerate('docx')}
+                                onClick={() => handleGenerate('zip')}
                                 disabled={isLoading}
                                 className="gap-2 rounded-xl font-semibold"
                             >
-                                {loadingFormat === 'docx' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                                {loadingFormat === 'docx' ? 'Generando...' : 'Generar DOCX'}
+                                {loadingFormat === 'zip' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Package className="w-4 h-4" />}
+                                {loadingFormat === 'zip' ? 'Empaquetando...' : 'Generar Paquete (ZIP)'}
                             </Button>
                         </motion.div>
                     </div>

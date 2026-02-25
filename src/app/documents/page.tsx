@@ -13,10 +13,11 @@ function getProjectBadge(project: string) {
     return 'PP';
 }
 
-function getStatusBadge(format: 'pdf' | 'docx' | 'both') {
+function getStatusBadge(format: 'pdf' | 'docx' | 'zip' | 'both') {
     switch (format) {
         case 'pdf': return { label: 'PDF', cls: 'bg-red-500/10 text-red-400 ring-red-500/20' };
         case 'docx': return { label: 'DOCX', cls: 'bg-blue-500/10 text-blue-400 ring-blue-500/20' };
+        case 'zip': return { label: 'ZIP', cls: 'bg-emerald-500/10 text-emerald-400 ring-emerald-500/20' };
         case 'both': return { label: 'PDF + DOCX', cls: 'bg-emerald-500/10 text-emerald-400 ring-emerald-500/20' };
     }
 }

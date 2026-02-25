@@ -1,17 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { ContractPayload } from '@/types/contract';
 import { Document, Paragraph, TextRun, Packer, AlignmentType, Header, Footer, PageNumber, Table, TableRow, TableCell, WidthType, ShadingType, BorderStyle } from 'docx';
 import { contractTemplates as t } from '@/constants/contractTemplates';
-import { getDocumentFilename } from '@/utils/documentName';
 import { formatLegalCurrency } from '@/utils/numberToWords';
 import { buildInstallmentTable, formatPaymentDate } from '@/utils/paymentTable';
 
-export async function POST(req: NextRequest) {
+export async function generateDocxBuffer(payload: ContractPayload): Promise<Uint8Array> {
     try {
-        const payload: ContractPayload = await req.json();
-
         if (!payload.client || !payload.property || !payload.paymentPlan || !payload.clauses) {
-            return NextResponse.json({ error: 'Invalid Payload' }, { status: 400 });
+            throw new Error('Invalid Payload');
         }
 
         const legalAmount = (amount: number) => formatLegalCurrency(amount, payload.paymentPlan.currency);
@@ -721,6 +717,54 @@ export async function POST(req: NextRequest) {
                         ]
                     }),
 
+                    // Signatures Block
+                    new Paragraph({
+                        spacing: { before: 800 },
+                        children: []
+                    }),
+                    new Table({
+                        width: { size: 100, type: WidthType.PERCENTAGE },
+                        borders: {
+                            top: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
+                            bottom: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
+                            left: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
+                            right: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
+                            insideHorizontal: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
+                            insideVertical: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
+                        },
+                        rows: [
+                            new TableRow({
+                                children: [
+                                    new TableCell({
+                                        width: { size: 45, type: WidthType.PERCENTAGE },
+                                        children: [
+                                            new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: "_________________________________________________" })] }),
+                                            new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: 'Por "LA PROMITENTE VENDEDORA"', bold: true })] }),
+                                            new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: "Sr. Juan Andrés Romero", bold: true })] }),
+                                        ]
+                                    }),
+                                    new TableCell({
+                                        width: { size: 10, type: WidthType.PERCENTAGE },
+                                        children: [new Paragraph("")]
+                                    }),
+                                    new TableCell({
+                                        width: { size: 45, type: WidthType.PERCENTAGE },
+                                        children: [
+                                            new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: "_________________________________________________" })] }),
+                                            new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: 'Por "EL BENEFICIARIO"', bold: true })] }),
+                                            new Paragraph({
+                                                alignment: AlignmentType.CENTER, children: [new TextRun({
+                                                    text: c.type === 'Fisica' ? c.name : (c.legalRepresentative?.name || "Representante Legal"),
+                                                    bold: true
+                                                })]
+                                            }),
+                                        ]
+                                    })
+                                ]
+                            })
+                        ]
+                    }),
+
                     // ANEXOS
                     ...(payload.clauses.qualityMemory ? [
                         new Paragraph({
@@ -794,19 +838,10 @@ export async function POST(req: NextRequest) {
         });
 
         const buffer = await Packer.toBuffer(doc);
+        return new Uint8Array(buffer);
 
-        return new NextResponse(new Uint8Array(buffer), {
-            status: 200,
-            headers: {
-                'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                'Content-Disposition': `attachment; filename="${getDocumentFilename(payload, 'docx')}"`
-            }
-        });
     } catch (error: any) {
         console.error('DOCX Generation Error:', error);
-        return NextResponse.json(
-            { error: 'Failed to generate contract DOCX', details: error.message },
-            { status: 500 }
-        );
+        throw error;
     }
 }

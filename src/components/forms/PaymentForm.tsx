@@ -22,7 +22,7 @@ export function PaymentForm({ payload, setPayload }: Props) {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let { name, value, type, checked } = e.target;
-        const numericFields = ['totalPrice', 'reservationAmount', 'downPaymentAmount', 'deliveryAmount', 'constructionInstallments'];
+        const numericFields = ['basePrice', 'totalPrice', 'exchangeRate', 'reservationAmount', 'downPaymentAmount', 'deliveryAmount', 'constructionInstallments'];
         const finalValue = type === 'checkbox' ? checked : (numericFields.includes(name) ? Number(value) : value);
 
         setPayload({
@@ -83,8 +83,20 @@ export function PaymentForm({ payload, setPayload }: Props) {
                         </label>
                     </div>
 
-                    <div className="space-y-2 md:col-span-2">
-                        <Label>Precio Total del Contrato</Label>
+                    <div className="space-y-2">
+                        <Label>Precio de Lista (Base Price)</Label>
+                        <Input
+                            type="number"
+                            name="basePrice"
+                            min="0"
+                            value={plan.basePrice || ''}
+                            onChange={handleChange}
+                            placeholder="e.g. 260000"
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label>Precio Total (Negociado) {plan.basePrice && plan.totalPrice ? <span className="text-emerald-600 text-xs ml-2 font-bold bg-emerald-100 px-2 py-0.5 rounded-full">-{((1 - (plan.totalPrice / plan.basePrice)) * 100).toFixed(2)}% DESC</span> : null}</Label>
                         <Input
                             type="number"
                             name="totalPrice"
@@ -95,19 +107,45 @@ export function PaymentForm({ payload, setPayload }: Props) {
                         />
                     </div>
 
+                    {plan.currency === 'EUR' && (
+                        <div className="space-y-2 md:col-span-2">
+                            <Label>Tipo de Cambio (EUR a USD) para Fianza Seguros</Label>
+                            <div className="flex items-center gap-3">
+                                <Input
+                                    type="number"
+                                    name="exchangeRate"
+                                    step="0.0001"
+                                    min="0"
+                                    value={plan.exchangeRate || ''}
+                                    onChange={handleChange}
+                                    placeholder="Ej. 1.05"
+                                    className="max-w-[200px]"
+                                />
+                                <span className="text-xs text-muted-foreground">Congela la tasa del BC para que la aseguradora reciba el contrato en Dólares.</span>
+                            </div>
+                        </div>
+                    )}
+
                     {!plan.isCash && (
                         <>
                             {/* Reserva */}
                             <div className="space-y-2">
                                 <Label>Monto de Reserva</Label>
-                                <Input
-                                    type="number"
-                                    name="reservationAmount"
-                                    min="0"
-                                    value={plan.reservationAmount || ''}
-                                    onChange={handleChange}
-                                    placeholder="e.g. 2500"
-                                />
+                                <div className="flex gap-2">
+                                    <Input
+                                        type="number"
+                                        name="reservationAmount"
+                                        min="0"
+                                        value={plan.reservationAmount || ''}
+                                        onChange={handleChange}
+                                        placeholder="e.g. 2500"
+                                    />
+                                    {plan.totalPrice > 0 && (
+                                        <div className="w-16 flex items-center justify-center text-xs font-medium bg-muted rounded-md border text-muted-foreground">
+                                            {((plan.reservationAmount / plan.totalPrice) * 100).toFixed(1)}%
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                             <div className="space-y-2">
                                 <Label>Fecha de Reserva</Label>
@@ -122,14 +160,21 @@ export function PaymentForm({ payload, setPayload }: Props) {
                             {/* Inicial */}
                             <div className="space-y-2">
                                 <Label>Monto Inicial (Down Payment)</Label>
-                                <Input
-                                    type="number"
-                                    name="downPaymentAmount"
-                                    min="0"
-                                    value={plan.downPaymentAmount || ''}
-                                    onChange={handleChange}
-                                    placeholder="e.g. 65000"
-                                />
+                                <div className="flex gap-2">
+                                    <Input
+                                        type="number"
+                                        name="downPaymentAmount"
+                                        min="0"
+                                        value={plan.downPaymentAmount || ''}
+                                        onChange={handleChange}
+                                        placeholder="e.g. 65000"
+                                    />
+                                    {plan.totalPrice > 0 && (
+                                        <div className="w-16 flex items-center justify-center text-xs font-medium bg-muted rounded-md border text-muted-foreground">
+                                            {((plan.downPaymentAmount / plan.totalPrice) * 100).toFixed(1)}%
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                             <div className="space-y-2">
                                 <Label>Fecha del Inicial</Label>
@@ -166,16 +211,39 @@ export function PaymentForm({ payload, setPayload }: Props) {
                         </>
                     )}
 
-                    <div className="space-y-2 md:col-span-2">
+                    <div className="space-y-2 md:col-span-2 text-primary">
                         <Label>Saldo Contra Entrega</Label>
-                        <Input
-                            type="number"
-                            name="deliveryAmount"
-                            min="0"
-                            value={plan.deliveryAmount || ''}
-                            onChange={handleChange}
-                            placeholder="e.g. 170000"
-                        />
+                        <div className="flex gap-2">
+                            <Input
+                                type="number"
+                                name="deliveryAmount"
+                                min="0"
+                                value={plan.deliveryAmount || ''}
+                                onChange={handleChange}
+                                placeholder="e.g. 170000"
+                            />
+                            {plan.totalPrice > 0 && (
+                                <div className="w-16 flex items-center justify-center text-xs font-medium bg-muted rounded-md border text-muted-foreground mr-2">
+                                    {((plan.deliveryAmount / plan.totalPrice) * 100).toFixed(1)}%
+                                </div>
+                            )}
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const remaining = Math.max(0, plan.totalPrice - (plan.reservationAmount || 0) - (plan.downPaymentAmount || 0));
+                                    setPayload({
+                                        ...payload,
+                                        paymentPlan: {
+                                            ...plan,
+                                            deliveryAmount: remaining
+                                        } as any
+                                    });
+                                }}
+                                className="px-3 rounded-md bg-secondary text-secondary-foreground text-xs font-medium hover:bg-secondary/80 focus:ring-2 focus:outline-none"
+                            >
+                                Calcular (Restante)
+                            </button>
+                        </div>
                     </div>
                 </div>
             </CardContent>

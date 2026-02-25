@@ -41,6 +41,33 @@ export function PartyForm({ payload, setPayload }: Props) {
         });
     };
 
+    const handleRepresentativeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setPayload({
+            ...payload,
+            client: {
+                ...payload.client,
+                legalRepresentative: {
+                    ...(payload.client as any).legalRepresentative,
+                    [name]: value
+                }
+            } as any
+        });
+    };
+
+    const handleRepresentativeSelectChange = (name: string, value: string) => {
+        setPayload({
+            ...payload,
+            client: {
+                ...payload.client,
+                legalRepresentative: {
+                    ...(payload.client as any).legalRepresentative,
+                    [name]: value
+                }
+            } as any
+        });
+    };
+
     if (!client) return null;
 
     return (
@@ -119,15 +146,61 @@ export function PartyForm({ payload, setPayload }: Props) {
                             </div>
                         </>
                     ) : (
-                        <div className="space-y-2">
-                            <Label>RNC / CIF</Label>
-                            <Input
-                                type="text"
-                                name="rncCif"
-                                value={(client as any).rncCif || ''}
-                                onChange={handleChange}
-                            />
-                        </div>
+                        <>
+                            <div className="space-y-2">
+                                <Label>RNC / CIF</Label>
+                                <Input
+                                    type="text"
+                                    name="rncCif"
+                                    value={(client as any).rncCif || ''}
+                                    onChange={handleChange}
+                                    placeholder="RNC de la Empresa"
+                                />
+                            </div>
+
+                            <div className="space-y-2 md:col-span-2 mt-4 pt-4 border-t border-border/50">
+                                <Label className="text-muted-foreground text-xs uppercase tracking-wider mb-2 block">Datos del Representante Legal</Label>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label>Nombre Completo del Representante</Label>
+                                <Input
+                                    type="text"
+                                    name="name"
+                                    value={(client as any).legalRepresentative?.name || ''}
+                                    onChange={handleRepresentativeChange}
+                                    placeholder="Nombre de quien firma"
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label>Tipo de Documento</Label>
+                                <Select
+                                    value={(client as any).legalRepresentative?.documentType || 'Pasaporte'}
+                                    onValueChange={(val) => handleRepresentativeSelectChange('documentType', val)}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Seleccione documento" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="Pasaporte">Pasaporte</SelectItem>
+                                        <SelectItem value="DNI">DNI</SelectItem>
+                                        <SelectItem value="Cedula">Cédula</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label>Número de Documento</Label>
+                                <Input
+                                    type="text"
+                                    name="documentNumber"
+                                    value={(client as any).legalRepresentative?.documentNumber || ''}
+                                    onChange={handleRepresentativeChange}
+                                    placeholder="Número de identidad"
+                                />
+                            </div>
+                        </>
                     )}
 
                     <div className="space-y-2 md:col-span-2">

@@ -1,0 +1,581 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model auth_group {
+  id                     Int                      @id @default(autoincrement())
+  name                   String                   @unique(map: "sqlite_autoindex_auth_group_1")
+  auth_group_permissions auth_group_permissions[]
+  auth_user_groups       auth_user_groups[]
+}
+
+model auth_group_permissions {
+  id              Int             @id @default(autoincrement())
+  group_id        Int
+  permission_id   Int
+  auth_permission auth_permission @relation(fields: [permission_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  auth_group      auth_group      @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([group_id, permission_id], map: "auth_group_permissions_group_id_permission_id_0cd325b0_uniq")
+  @@index([permission_id], map: "auth_group_permissions_permission_id_84c5c92e")
+  @@index([group_id], map: "auth_group_permissions_group_id_b120cbf9")
+}
+
+model auth_permission {
+  id                         Int                          @id @default(autoincrement())
+  content_type_id            Int
+  codename                   String
+  name                       String
+  auth_group_permissions     auth_group_permissions[]
+  django_content_type        django_content_type          @relation(fields: [content_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  auth_user_user_permissions auth_user_user_permissions[]
+
+  @@unique([content_type_id, codename], map: "auth_permission_content_type_id_codename_01ab375a_uniq")
+  @@index([content_type_id], map: "auth_permission_content_type_id_2f476e4b")
+}
+
+model auth_user {
+  id                                                                                 Int                             @id @default(autoincrement())
+  password                                                                           String
+  last_login                                                                         DateTime?
+  is_superuser                                                                       Unsupported("bool")
+  username                                                                           String                          @unique(map: "sqlite_autoindex_auth_user_1")
+  last_name                                                                          String
+  email                                                                              String
+  is_staff                                                                           Unsupported("bool")
+  is_active                                                                          Unsupported("bool")
+  date_joined                                                                        DateTime
+  first_name                                                                         String
+  auth_user_groups                                                                   auth_user_groups[]
+  auth_user_user_permissions                                                         auth_user_user_permissions[]
+  data_entry_broker                                                                  data_entry_broker?
+  data_entry_closer                                                                  data_entry_closer?
+  data_entry_formularioreserva_data_entry_formularioreserva_creado_por_idToauth_user data_entry_formularioreserva[]  @relation("data_entry_formularioreserva_creado_por_idToauth_user")
+  data_entry_formularioreserva_data_entry_formularioreserva_vendedor_idToauth_user   data_entry_formularioreserva[]  @relation("data_entry_formularioreserva_vendedor_idToauth_user")
+  data_entry_historialpropiedad                                                      data_entry_historialpropiedad[]
+  data_entry_liner                                                                   data_entry_liner?
+  data_entry_notificacion                                                            data_entry_notificacion[]
+  data_entry_propiedad_data_entry_propiedad_reservada_por_idToauth_user              data_entry_propiedad[]          @relation("data_entry_propiedad_reservada_por_idToauth_user")
+  data_entry_propiedad_data_entry_propiedad_autorizado_por_idToauth_user             data_entry_propiedad[]          @relation("data_entry_propiedad_autorizado_por_idToauth_user")
+  data_entry_reservacliente_data_entry_reservacliente_broker_idToauth_user           data_entry_reservacliente[]     @relation("data_entry_reservacliente_broker_idToauth_user")
+  data_entry_reservacliente_data_entry_reservacliente_vendedor_idToauth_user         data_entry_reservacliente[]     @relation("data_entry_reservacliente_vendedor_idToauth_user")
+  data_entry_reservacompleta                                                         data_entry_reservacompleta[]
+  django_admin_log                                                                   django_admin_log[]
+}
+
+model auth_user_groups {
+  id         Int        @id @default(autoincrement())
+  user_id    Int
+  group_id   Int
+  auth_group auth_group @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  auth_user  auth_user  @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([user_id, group_id], map: "auth_user_groups_user_id_group_id_94350c0c_uniq")
+  @@index([group_id], map: "auth_user_groups_group_id_97559544")
+  @@index([user_id], map: "auth_user_groups_user_id_6a12ed8b")
+}
+
+model auth_user_user_permissions {
+  id              Int             @id @default(autoincrement())
+  user_id         Int
+  permission_id   Int
+  auth_permission auth_permission @relation(fields: [permission_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  auth_user       auth_user       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([user_id, permission_id], map: "auth_user_user_permissions_user_id_permission_id_14a6b632_uniq")
+  @@index([permission_id], map: "auth_user_user_permissions_permission_id_1fbb5f2c")
+  @@index([user_id], map: "auth_user_user_permissions_user_id_a95ead1b")
+}
+
+model data_entry_asignacionpropiedad {
+  id                   Int                  @id @default(autoincrement())
+  fecha_asignacion     DateTime
+  fecha_fin            DateTime?
+  estado               String
+  notas                String
+  fecha_creacion       DateTime
+  fecha_actualizacion  DateTime
+  broker_id            Int?
+  propiedad_id         Int
+  tipo_asignacion      String
+  liner_id             Int?
+  data_entry_liner     data_entry_liner?    @relation(fields: [liner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  data_entry_propiedad data_entry_propiedad @relation(fields: [propiedad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  data_entry_broker    data_entry_broker?   @relation(fields: [broker_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([propiedad_id, broker_id, liner_id, estado], map: "data_entry_asignacionpropiedad_propiedad_id_broker_id_liner_id_estado_a9d2e04c_uniq")
+  @@index([liner_id], map: "data_entry_asignacionpropiedad_liner_id_1da33033")
+  @@index([propiedad_id], map: "data_entry_asignacionpropiedad_propiedad_id_b1ff5eee")
+  @@index([broker_id], map: "data_entry_asignacionpropiedad_broker_id_e1397edb")
+}
+
+model data_entry_asignacionproyecto {
+  id                                                                           Int                 @id @default(autoincrement())
+  tipo_asignacion                                                              String
+  fecha_asignacion                                                             DateTime
+  fecha_fin                                                                    DateTime?
+  estado                                                                       String
+  notas                                                                        String
+  fecha_creacion                                                               DateTime
+  fecha_actualizacion                                                          DateTime
+  broker_id                                                                    Int?
+  proyecto_id                                                                  Int
+  closer_id                                                                    Int?
+  kam_id                                                                       Int?
+  liner_id                                                                     Int?
+  data_entry_liner                                                             data_entry_liner?   @relation(fields: [liner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  data_entry_closer_data_entry_asignacionproyecto_kam_idTodata_entry_closer    data_entry_closer?  @relation("data_entry_asignacionproyecto_kam_idTodata_entry_closer", fields: [kam_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  data_entry_closer_data_entry_asignacionproyecto_closer_idTodata_entry_closer data_entry_closer?  @relation("data_entry_asignacionproyecto_closer_idTodata_entry_closer", fields: [closer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  data_entry_proyecto                                                          data_entry_proyecto @relation(fields: [proyecto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  data_entry_broker                                                            data_entry_broker?  @relation(fields: [broker_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([proyecto_id, broker_id, liner_id, estado], map: "data_entry_asignacionproyecto_proyecto_id_broker_id_liner_id_estado_ed8d05b8_uniq")
+  @@index([liner_id], map: "data_entry_asignacionproyecto_liner_id_d6a4a279")
+  @@index([kam_id], map: "data_entry_asignacionproyecto_kam_id_37883043")
+  @@index([closer_id], map: "data_entry_asignacionproyecto_closer_id_acec5122")
+  @@index([proyecto_id], map: "data_entry_asignacionproyecto_proyecto_id_28f164da")
+  @@index([broker_id], map: "data_entry_asignacionproyecto_broker_id_1989a9a9")
+}
+
+model data_entry_broker {
+  id                             Int                              @id @default(autoincrement())
+  nombre                         String
+  email                          String                           @unique(map: "sqlite_autoindex_data_entry_broker_1")
+  telefono                       String
+  activo                         Unsupported("bool")
+  fecha_creacion                 DateTime
+  fecha_actualizacion            DateTime
+  user_id                        Int?                             @unique(map: "sqlite_autoindex_data_entry_broker_2")
+  rol_id                         Int?
+  empresa                        String?
+  closer_id                      Int?
+  data_entry_asignacionpropiedad data_entry_asignacionpropiedad[]
+  data_entry_asignacionproyecto  data_entry_asignacionproyecto[]
+  data_entry_closer              data_entry_closer?               @relation(fields: [closer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  data_entry_rol                 data_entry_rol?                  @relation(fields: [rol_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  auth_user                      auth_user?                       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  data_entry_liner               data_entry_liner[]
+  data_entry_propiedad           data_entry_propiedad[]
+  data_entry_reserva             data_entry_reserva[]
+
+  @@index([closer_id], map: "data_entry_broker_closer_id_ab4e6c89")
+  @@index([rol_id], map: "data_entry_broker_rol_id_840db9a2")
+}
+
+model data_entry_cliente {
+  id                                         Int                                          @id @default(autoincrement())
+  nombre                                     String
+  email                                      String                                       @unique(map: "sqlite_autoindex_data_entry_cliente_1")
+  telefono                                   String
+  activo                                     Unsupported("bool")
+  fecha_creacion                             DateTime
+  tipo_interes                               String
+  presupuesto                                Decimal?
+  notas                                      String
+  data_entry_cliente_propiedades_interesadas data_entry_cliente_propiedades_interesadas[]
+  data_entry_reserva                         data_entry_reserva[]
+}
+
+model data_entry_cliente_propiedades_interesadas {
+  id                   Int                  @id @default(autoincrement())
+  cliente_id           Int
+  propiedad_id         Int
+  data_entry_propiedad data_entry_propiedad @relation(fields: [propiedad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  data_entry_cliente   data_entry_cliente   @relation(fields: [cliente_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([cliente_id, propiedad_id], map: "data_entry_cliente_propiedades_interesadas_cliente_id_propiedad_id_256a221d_uniq")
+  @@index([propiedad_id], map: "data_entry_cliente_propiedades_interesadas_propiedad_id_00c8c194")
+  @@index([cliente_id], map: "data_entry_cliente_propiedades_interesadas_cliente_id_95e1a056")
+}
+
+model data_entry_closer {
+  id                                                                                       Int                             @id @default(autoincrement())
+  nombre                                                                                   String
+  email                                                                                    String                          @unique(map: "sqlite_autoindex_data_entry_closer_1")
+  telefono                                                                                 String
+  activo                                                                                   Unsupported("bool")
+  fecha_creacion                                                                           DateTime
+  fecha_actualizacion                                                                      DateTime
+  user_id                                                                                  Int?                            @unique(map: "sqlite_autoindex_data_entry_closer_2")
+  data_entry_asignacionproyecto_data_entry_asignacionproyecto_kam_idTodata_entry_closer    data_entry_asignacionproyecto[] @relation("data_entry_asignacionproyecto_kam_idTodata_entry_closer")
+  data_entry_asignacionproyecto_data_entry_asignacionproyecto_closer_idTodata_entry_closer data_entry_asignacionproyecto[] @relation("data_entry_asignacionproyecto_closer_idTodata_entry_closer")
+  data_entry_broker                                                                        data_entry_broker[]
+  auth_user                                                                                auth_user?                      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  data_entry_liner                                                                         data_entry_liner[]
+  data_entry_propiedad                                                                     data_entry_propiedad[]
+}
+
+model data_entry_detalleplanpago {
+  id                 Int                @id @default(autoincrement())
+  concepto           String
+  fecha_pago         DateTime
+  importe            Decimal
+  reserva_id         Int
+  data_entry_reserva data_entry_reserva @relation(fields: [reserva_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([reserva_id], map: "data_entry_detalleplanpago_reserva_id_a1804100")
+}
+
+model data_entry_edificio {
+  id                   Int                    @id @default(autoincrement())
+  nombre               String
+  direccion            String?
+  estado               String
+  pisos                Int
+  unidades             Int
+  fecha_construccion   DateTime?
+  descripcion          String?
+  imagen               String?
+  plano                String?
+  fecha_creacion       DateTime
+  fecha_actualizacion  DateTime
+  data_entry_propiedad data_entry_propiedad[]
+}
+
+model data_entry_emailnotificacionbloqueo {
+  id                  Int                 @id @default(autoincrement())
+  email               String              @unique(map: "sqlite_autoindex_data_entry_emailnotificacionbloqueo_1")
+  nombre              String?
+  activo              Unsupported("bool")
+  fecha_creacion      DateTime
+  fecha_actualizacion DateTime
+}
+
+model data_entry_formularioreserva {
+  id                                                              Int                   @id @default(autoincrement())
+  tipo_propiedad                                                  String?
+  precio_propiedad                                                Decimal
+  valor_cuota                                                     Decimal
+  fecha_entrega                                                   DateTime?
+  otra_persona_nombre                                             String?
+  otra_persona_apellido                                           String?
+  otra_persona_telefono                                           String?
+  otra_persona_relacion                                           String?
+  fecha_creacion                                                  DateTime
+  observaciones                                                   String?
+  apellido_cliente                                                String
+  ciudad_cliente                                                  String?
+  codigo_postal_cliente                                           String?
+  cuotas_pago                                                     Int?
+  direccion_cliente                                               String?
+  email_cliente                                                   String
+  fecha_actualizacion                                             DateTime
+  idioma                                                          String
+  inicial_pago                                                    Decimal
+  nombre_cliente                                                  String
+  nombre_propiedad                                                String
+  otra_persona_email                                              String?
+  pais_cliente                                                    String?
+  plan_pago                                                       String?
+  telefono_cliente                                                String
+  ubicacion_propiedad                                             String?
+  vendedor_id                                                     Int?
+  creado_por_id                                                   Int?
+  estado                                                          String
+  propiedad_id                                                    Int?
+  data_entry_propiedad                                            data_entry_propiedad? @relation(fields: [propiedad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  auth_user_data_entry_formularioreserva_creado_por_idToauth_user auth_user?            @relation("data_entry_formularioreserva_creado_por_idToauth_user", fields: [creado_por_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  auth_user_data_entry_formularioreserva_vendedor_idToauth_user   auth_user?            @relation("data_entry_formularioreserva_vendedor_idToauth_user", fields: [vendedor_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([propiedad_id], map: "data_entry_formularioreserva_propiedad_id_a01581b3")
+  @@index([creado_por_id], map: "data_entry_formularioreserva_creado_por_id_2a32b7d3")
+  @@index([vendedor_id], map: "data_entry_formularioreserva_vendedor_id_2a1ee0d3")
+}
+
+model data_entry_formularioreservatemplate {
+  id                  Int      @id @default(autoincrement())
+  idioma              String   @unique(map: "sqlite_autoindex_data_entry_formularioreservatemplate_1")
+  titulo              String
+  contenido_html      String
+  contenido_pdf       String
+  fecha_creacion      DateTime
+  fecha_actualizacion DateTime
+}
+
+model data_entry_historialpropiedad {
+  id                   Int                  @id @default(autoincrement())
+  estado_anterior      String
+  estado_nuevo         String
+  fecha_cambio         DateTime
+  motivo               String
+  propiedad_id         Int
+  usuario_id           Int
+  auth_user            auth_user            @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  data_entry_propiedad data_entry_propiedad @relation(fields: [propiedad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([usuario_id], map: "data_entry_historialpropiedad_usuario_id_0869cc81")
+  @@index([propiedad_id], map: "data_entry_historialpropiedad_propiedad_id_462d2d1b")
+}
+
+model data_entry_liner {
+  id                             Int                              @id @default(autoincrement())
+  nombre                         String
+  email                          String                           @unique(map: "sqlite_autoindex_data_entry_liner_1")
+  telefono                       String
+  activo                         Unsupported("bool")
+  fecha_creacion                 DateTime
+  fecha_actualizacion            DateTime
+  rol_id                         Int?
+  user_id                        Int?                             @unique(map: "sqlite_autoindex_data_entry_liner_2")
+  broker_id                      Int?
+  empresa                        String?
+  closer_id                      Int?
+  data_entry_asignacionpropiedad data_entry_asignacionpropiedad[]
+  data_entry_asignacionproyecto  data_entry_asignacionproyecto[]
+  data_entry_closer              data_entry_closer?               @relation(fields: [closer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  data_entry_broker              data_entry_broker?               @relation(fields: [broker_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  auth_user                      auth_user?                       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  data_entry_rol                 data_entry_rol?                  @relation(fields: [rol_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  data_entry_propiedad           data_entry_propiedad[]
+  data_entry_reserva             data_entry_reserva[]
+  data_entry_reservacompleta     data_entry_reservacompleta[]
+
+  @@index([closer_id], map: "data_entry_vendedor_closer_id_44626663")
+  @@index([broker_id], map: "data_entry_vendedor_broker_id_4c11745a")
+  @@index([rol_id], map: "data_entry_vendedor_rol_id_71305b32")
+}
+
+model data_entry_notificacion {
+  id             Int                 @id @default(autoincrement())
+  tipo           String
+  titulo         String
+  mensaje        String
+  leida          Unsupported("bool")
+  fecha_creacion DateTime
+  fecha_lectura  DateTime?
+  url            String
+  usuario_id     Int
+  auth_user      auth_user           @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([usuario_id], map: "data_entry_notificacion_usuario_id_0143f750")
+}
+
+model data_entry_propiedad {
+  id                                                          Int                                          @id @default(autoincrement())
+  codigo                                                      String?                                      @unique(map: "sqlite_autoindex_data_entry_propiedad_1")
+  nombre                                                      String?
+  descripcion                                                 String?
+  precio                                                      Decimal?
+  precio_reserva                                              Decimal?
+  area                                                        Decimal?
+  habitaciones                                                Int?
+  banos                                                       Int?
+  tipo                                                        String?
+  estado                                                      String
+  fecha_creacion                                              DateTime
+  fecha_actualizacion                                         DateTime
+  imagen_principal                                            String?
+  nivel                                                       String
+  apartamento                                                 String
+  orientacion                                                 String
+  vistas                                                      String
+  m2_totales                                                  Decimal?
+  pies_totales                                                Decimal?
+  m2_interior                                                 Decimal?
+  pies_interior                                               Decimal?
+  m2_terraza                                                  Decimal?
+  pies_terraza                                                Decimal?
+  plano                                                       String?
+  caracteristicas                                             String
+  broker_id                                                   Int?
+  edificio_id                                                 Int?
+  proyecto_id                                                 Int?
+  dias_reserva                                                Int
+  fecha_reserva                                               DateTime?
+  autorizado_por_id                                           Int?
+  dias_bloqueo                                                Int
+  fecha_autorizacion                                          DateTime?
+  fecha_bloqueo                                               DateTime?
+  fecha_contrato                                              DateTime?
+  fecha_pago_inicial                                          DateTime?
+  fecha_pago_reserva                                          DateTime?
+  pago_inicial_realizado                                      Unsupported("bool")
+  pago_reserva_realizado                                      Unsupported("bool")
+  proyecto_autorizado                                         Unsupported("bool")
+  precio_base                                                 Decimal?
+  reservada_por_id                                            Int?
+  closer_id                                                   Int?
+  liner_id                                                    Int?
+  data_entry_asignacionpropiedad                              data_entry_asignacionpropiedad[]
+  data_entry_cliente_propiedades_interesadas                  data_entry_cliente_propiedades_interesadas[]
+  data_entry_formularioreserva                                data_entry_formularioreserva[]
+  data_entry_historialpropiedad                               data_entry_historialpropiedad[]
+  data_entry_liner                                            data_entry_liner?                            @relation(fields: [liner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  data_entry_closer                                           data_entry_closer?                           @relation(fields: [closer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  auth_user_data_entry_propiedad_reservada_por_idToauth_user  auth_user?                                   @relation("data_entry_propiedad_reservada_por_idToauth_user", fields: [reservada_por_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  auth_user_data_entry_propiedad_autorizado_por_idToauth_user auth_user?                                   @relation("data_entry_propiedad_autorizado_por_idToauth_user", fields: [autorizado_por_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  data_entry_proyecto                                         data_entry_proyecto?                         @relation(fields: [proyecto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  data_entry_edificio                                         data_entry_edificio?                         @relation(fields: [edificio_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  data_entry_broker                                           data_entry_broker?                           @relation(fields: [broker_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  data_entry_reserva                                          data_entry_reserva[]
+  data_entry_reservacliente                                   data_entry_reservacliente[]
+  data_entry_reservacompleta                                  data_entry_reservacompleta[]
+
+  @@index([liner_id], map: "data_entry_propiedad_liner_id_08272c7f")
+  @@index([closer_id], map: "data_entry_propiedad_closer_id_fc21bf77")
+  @@index([reservada_por_id], map: "data_entry_propiedad_reservada_por_id_0c6caa4f")
+  @@index([autorizado_por_id], map: "data_entry_propiedad_autorizado_por_id_5d5bf7ba")
+  @@index([proyecto_id], map: "data_entry_propiedad_proyecto_id_37304ec3")
+  @@index([edificio_id], map: "data_entry_propiedad_edificio_id_769bc5ca")
+  @@index([broker_id], map: "data_entry_propiedad_broker_id_a7d2421f")
+}
+
+model data_entry_proyecto {
+  id                            Int                             @id @default(autoincrement())
+  nombre                        String
+  descripcion                   String
+  direccion                     String?
+  estado                        String
+  fecha_creacion                DateTime
+  fecha_actualizacion           DateTime
+  data_entry_asignacionproyecto data_entry_asignacionproyecto[]
+  data_entry_propiedad          data_entry_propiedad[]
+}
+
+model data_entry_reserva {
+  id                         Int                          @id @default(autoincrement())
+  fecha_reserva              DateTime
+  fecha_entrada              DateTime
+  fecha_salida               DateTime
+  estado                     String
+  precio_total               Decimal
+  notas                      String
+  fecha_creacion             DateTime
+  fecha_actualizacion        DateTime
+  cliente_id                 Int
+  propiedad_id               Int
+  broker_id                  Int?
+  fecha_pago_inicial         DateTime?
+  fecha_pago_reserva         DateTime?
+  pago_inicial_realizado     Unsupported("bool")
+  pago_reserva_realizado     Unsupported("bool")
+  liner_id                   Int?
+  data_entry_detalleplanpago data_entry_detalleplanpago[]
+  data_entry_liner           data_entry_liner?            @relation(fields: [liner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  data_entry_broker          data_entry_broker?           @relation(fields: [broker_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  data_entry_propiedad       data_entry_propiedad         @relation(fields: [propiedad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  data_entry_cliente         data_entry_cliente           @relation(fields: [cliente_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([liner_id], map: "data_entry_reserva_liner_id_8523af26")
+  @@index([broker_id], map: "data_entry_reserva_broker_id_d443d9ec")
+  @@index([propiedad_id], map: "data_entry_reserva_propiedad_id_0bb217c5")
+  @@index([cliente_id], map: "data_entry_reserva_cliente_id_8da8ef31")
+}
+
+model data_entry_reservacliente {
+  id                                                         Int                   @id @default(autoincrement())
+  nombre_cliente                                             String
+  documento_identidad                                        String
+  telefono                                                   String
+  email                                                      String
+  metodo_pago                                                String
+  monto_reserva                                              Decimal
+  precio_total_unidad                                        Decimal
+  plan_inicial                                               String
+  plan_cuotas                                                String
+  plan_entrega                                               String
+  observaciones                                              String?
+  fecha_creacion                                             DateTime
+  vendedor_id                                                Int?
+  fecha_reserva                                              DateTime
+  lugar                                                      String
+  broker_id                                                  Int?
+  propiedad_id                                               Int?
+  data_entry_propiedad                                       data_entry_propiedad? @relation(fields: [propiedad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  auth_user_data_entry_reservacliente_broker_idToauth_user   auth_user?            @relation("data_entry_reservacliente_broker_idToauth_user", fields: [broker_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  auth_user_data_entry_reservacliente_vendedor_idToauth_user auth_user?            @relation("data_entry_reservacliente_vendedor_idToauth_user", fields: [vendedor_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([propiedad_id], map: "data_entry_reservacliente_propiedad_id_506cc96c")
+  @@index([broker_id], map: "data_entry_reservacliente_broker_id_8673edeb")
+  @@index([vendedor_id], map: "data_entry_reservacliente_vendedor_id_95f6f2af")
+}
+
+model data_entry_reservacompleta {
+  id                   Int                             @id @default(autoincrement())
+  nombre_cliente       String
+  identificacion       String
+  telefono             String
+  email                String
+  unidad_id            Int?
+  precio               Decimal
+  importe_reserva      Decimal
+  importe_inicial      Decimal
+  importe_cuotas       Decimal
+  importe_entrega      Decimal
+  importe_total        Decimal
+  metodo_pago          String
+  concepto             String
+  fecha_firma          DateTime
+  creado_en            DateTime
+  observaciones        String?
+  estado               String
+  creado_por_id        Int?
+  cantidad_cuotas      Unsupported("integer unsigned")
+  moneda               String
+  liner_id             Int?
+  data_entry_liner     data_entry_liner?               @relation(fields: [liner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  auth_user            auth_user?                      @relation(fields: [creado_por_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  data_entry_propiedad data_entry_propiedad?           @relation(fields: [unidad_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([liner_id], map: "data_entry_reservacompleta_liner_id_534a7583")
+  @@index([creado_por_id], map: "data_entry_reservacompleta_creado_por_id_22c8e285")
+  @@index([unidad_id], map: "data_entry_reservacompleta_unidad_id_64c2809e")
+}
+
+model data_entry_rol {
+  id                  Int                 @id @default(autoincrement())
+  nombre              String              @unique(map: "sqlite_autoindex_data_entry_rol_1")
+  descripcion         String
+  permisos            String
+  fecha_creacion      DateTime
+  fecha_actualizacion DateTime
+  data_entry_broker   data_entry_broker[]
+  data_entry_liner    data_entry_liner[]
+}
+
+model django_admin_log {
+  id                  Int                              @id @default(autoincrement())
+  object_id           String?
+  object_repr         String
+  action_flag         Unsupported("smallint unsigned")
+  change_message      String
+  content_type_id     Int?
+  user_id             Int
+  action_time         DateTime
+  auth_user           auth_user                        @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  django_content_type django_content_type?             @relation(fields: [content_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([user_id], map: "django_admin_log_user_id_c564eba6")
+  @@index([content_type_id], map: "django_admin_log_content_type_id_c4bce8eb")
+}
+
+model django_content_type {
+  id               Int                @id @default(autoincrement())
+  app_label        String
+  model            String
+  auth_permission  auth_permission[]
+  django_admin_log django_admin_log[]
+
+  @@unique([app_label, model], map: "django_content_type_app_label_model_76bd3d3b_uniq")
+}
+
+model django_migrations {
+  id      Int      @id @default(autoincrement())
+  app     String
+  name    String
+  applied DateTime
+}
+
+model django_session {
+  session_key  String   @id
+  session_data String
+  expire_date  DateTime
+
+  @@index([expire_date], map: "django_session_expire_date_a5c62663")
+}

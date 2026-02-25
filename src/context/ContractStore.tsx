@@ -8,8 +8,8 @@ export interface StoredContract {
     generatedAt: string; // ISO date
     payload: ContractPayload;
     filename: string;
-    format: 'pdf' | 'docx' | 'both';
-    blobUrl?: string; // ephemeral, not persisted
+    format: 'pdf' | 'docx' | 'zip' | 'both';
+    blobUrl?: string; // Optional URL for preview/download
 }
 
 interface ContractStoreContextType {
