@@ -68,17 +68,26 @@ export async function generateDocxBuffer(payload: ContractPayload): Promise<Uint
             });
         };
 
+        const coSigner = payload.coSigner;
+
         const renderBeneficiarioParagraph = () => {
             if (c.type === 'Fisica') {
+                const coSignerRuns = coSigner ? [
+                    new TextRun(", y "),
+                    new TextRun({ text: coSigner.name, bold: true }),
+                    new TextRun(`, de nacionalidad ${coSigner.nationality}, mayor de edad, con ${coSigner.documentType} N\u00ba `),
+                    new TextRun({ text: coSigner.documentNumber, bold: true }),
+                ] : [];
                 return new Paragraph({
                     alignment: AlignmentType.JUSTIFIED,
                     spacing: { after: 200 },
                     children: [
                         new TextRun("Y por la otra parte, "),
                         new TextRun({ text: c.name, bold: true }),
-                        new TextRun(`, de nacionalidad ${c.nationality}, mayor de edad, con estado civil ${c.civilStatus}, con ${c.documentType} Nº `),
+                        new TextRun(`, de nacionalidad ${c.nationality}, mayor de edad, con ${c.documentType} N\u00ba `),
                         new TextRun({ text: c.documentNumber, bold: true }),
-                        new TextRun(`, domiciliado en ${c.address}, y quienes en lo sucesivo para el presente contrato se denominarán "EL BENEFICIARIO" o por su propio nombre.`)
+                        ...coSignerRuns,
+                        new TextRun(`, domiciliados en ${c.address}, y quienes en lo sucesivo para el presente contrato se denominar\u00e1n "EL BENEFICIARIO" o por su propio nombre.`)
                     ]
                 });
             } else {
@@ -88,13 +97,13 @@ export async function generateDocxBuffer(payload: ContractPayload): Promise<Uint
                     children: [
                         new TextRun("Y por la otra parte, "),
                         new TextRun({ text: c.name, bold: true }),
-                        new TextRun(`, sociedad mercantil organizada bajo las leyes, RNC/CIF Nº `),
+                        new TextRun(`, sociedad mercantil organizada bajo las leyes, RNC/CIF N\u00ba `),
                         new TextRun({ text: c.rncCif, bold: true }),
                         new TextRun(`, con domicilio en ${c.address}, representada por `),
                         new TextRun({ text: c.legalRepresentative?.name || "", bold: true }),
-                        new TextRun(`, provisto de ${c.legalRepresentative?.documentType} Nº `),
+                        new TextRun(`, provisto de ${c.legalRepresentative?.documentType} N\u00ba `),
                         new TextRun({ text: c.legalRepresentative?.documentNumber || "", bold: true }),
-                        new TextRun(`, y quienes en lo sucesivo para el presente contrato se denominarán "EL BENEFICIARIO" o por su propio nombre.`)
+                        new TextRun(`, y quienes en lo sucesivo para el presente contrato se denominar\u00e1n "EL BENEFICIARIO" o por su propio nombre.`)
                     ]
                 });
             }
@@ -353,6 +362,15 @@ export async function generateDocxBuffer(payload: ContractPayload): Promise<Uint
                             new TextRun(t.TERCERO_PARRAFO_VII_B)
                         ]
                     }),
+                    ...(pay.currency === 'EUR' ? [
+                        new Paragraph({ alignment: AlignmentType.JUSTIFIED, spacing: { after: 100 }, children: [new TextRun({ text: "Banco beneficiario:", bold: true })] }),
+                        new Paragraph({ alignment: AlignmentType.JUSTIFIED, spacing: { after: 80 }, children: [new TextRun("Banco SANTANDER, S. A.")] }),
+                        new Paragraph({ alignment: AlignmentType.JUSTIFIED, spacing: { after: 80 }, children: [new TextRun("C. de Ferraz, 43, Moncloa – Aravaca, 28008 Madrid, España")] }),
+                        new Paragraph({ alignment: AlignmentType.JUSTIFIED, spacing: { after: 80 }, children: [new TextRun("SWIFT: BSCHESMMXXX")] }),
+                        new Paragraph({ alignment: AlignmentType.JUSTIFIED, spacing: { after: 80 }, children: [new TextRun("IBAN: ES27 0049 6660 7827 1630 0554")] }),
+                        new Paragraph({ alignment: AlignmentType.JUSTIFIED, spacing: { after: 80 }, children: [new TextRun({ text: "Beneficiario: INGENIERIA Y ESTRUCTURAS DEL CARIBE, INECAR, S.R.L.", bold: true })] }),
+                        new Paragraph({ alignment: AlignmentType.JUSTIFIED, spacing: { after: 200 }, children: [new TextRun("RNC: 1-32-43471-4 | Boulevard 1º de Noviembre No. 801, Aqua Business Center, Punta Cana Village, Punta Cana, La Altagracia, República Dominicana.")] }),
+                    ] : []),
                     new Paragraph({
                         alignment: AlignmentType.JUSTIFIED,
                         spacing: { after: 200 },
@@ -500,7 +518,7 @@ export async function generateDocxBuffer(payload: ContractPayload): Promise<Uint
                         spacing: { after: 200 },
                         children: [
                             new TextRun(t.UNDECIMO_BODY),
-                            new TextRun(` ${p.squareMeters} `),
+                            new TextRun({ text: ` ${((p as any).interiorSqMeters || p.squareMeters)} `, bold: true }),
                             new TextRun(t.UNDECIMO_BODY_B)
                         ]
                     }),
@@ -564,15 +582,35 @@ export async function generateDocxBuffer(payload: ContractPayload): Promise<Uint
                             new TextRun({ text: t.D_QUINTO_TITLE, bold: true, size: 20 })
                         ]
                     }),
-                    new Paragraph({
-                        alignment: AlignmentType.JUSTIFIED,
-                        spacing: { after: 200 },
-                        children: [
-                            new TextRun(t.D_QUINTO_BODY_1),
-                            new TextRun({ text: legalAmount(pay.totalPrice * 0.20), bold: true }),
-                            new TextRun(t.D_QUINTO_BODY_2)
-                        ]
-                    }),
+                    (() => {
+                        // Fianza = everything paid before entrega (Reserva + Inicial + Cuotas)
+                        const fianzaBase = pay.totalPrice - pay.deliveryAmount;
+                        const rate = pay.exchangeRate || 1.05;
+                        const fianzaUSD = fianzaBase * rate;
+                        if (pay.currency === 'EUR') {
+                            return new Paragraph({
+                                alignment: AlignmentType.JUSTIFIED,
+                                spacing: { after: 200 },
+                                children: [
+                                    new TextRun(t.D_QUINTO_BODY_1),
+                                    new TextRun({ text: legalAmount(fianzaBase), bold: true }),
+                                    new TextRun(t.D_QUINTO_BODY_2),
+                                    new TextRun({ text: ` Esta fianza ser\u00e1 emitida en d\u00f3lares americanos al tipo de cambio del contrato (1 EUR = ${rate} USD), por un monto de `, size: 20 }),
+                                    new TextRun({ text: formatLegalCurrency(fianzaUSD, 'USD'), bold: true }),
+                                    new TextRun('.')
+                                ]
+                            });
+                        }
+                        return new Paragraph({
+                            alignment: AlignmentType.JUSTIFIED,
+                            spacing: { after: 200 },
+                            children: [
+                                new TextRun(t.D_QUINTO_BODY_1),
+                                new TextRun({ text: legalAmount(pay.totalPrice * 0.20), bold: true }),
+                                new TextRun(t.D_QUINTO_BODY_2)
+                            ]
+                        });
+                    })(),
                     new Paragraph({
                         spacing: { before: 200, after: 200 },
                         children: [

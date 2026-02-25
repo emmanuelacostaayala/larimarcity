@@ -32,6 +32,8 @@ interface ApiProperty {
     type: string;
 }
 
+const MAINTENANCE_RATE = 2; // $2 USD per interior m²
+
 export function PropertyForm({ payload, setPayload }: Props) {
     const property = payload.property;
 
@@ -67,7 +69,7 @@ export function PropertyForm({ payload, setPayload }: Props) {
             property: {
                 ...prev.property,
                 project: val,
-                unitNumber: '', // Reset unit when project changes
+                unitNumber: '',
             } as any
         }));
     };
@@ -80,16 +82,17 @@ export function PropertyForm({ payload, setPayload }: Props) {
                 property: {
                     ...prev.property,
                     unitNumber: selected.unitNumber,
-                    level: Number(selected.level) || 1, // Fallback safely
+                    level: Number(selected.level) || 1,
                     squareMeters: selected.squareMeters,
+                    interiorSqMeters: (prev.property as any)?.interiorSqMeters || 0,
+                    terraceSqMeters: (prev.property as any)?.terraceSqMeters || 0,
                     rooms: selected.rooms,
                     bathrooms: selected.bathrooms,
                 } as any,
-                // Automatically set the price in the payment plan as well!
                 paymentPlan: {
                     ...(prev.paymentPlan as any),
                     basePrice: selected.basePrice,
-                    totalPrice: selected.basePrice, // default total to base price initially
+                    totalPrice: selected.basePrice,
                 }
             }));
         }
@@ -97,7 +100,8 @@ export function PropertyForm({ payload, setPayload }: Props) {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let { name, value } = e.target;
-        const parsedValue = ['level', 'squareMeters', 'rooms', 'bathrooms'].includes(name) ? Number(value) : value;
+        const numericFields = ['level', 'squareMeters', 'interiorSqMeters', 'terraceSqMeters', 'rooms', 'bathrooms', 'airConditioners', 'parkingSpaces', 'loteSqMeters', 'level1SqMeters', 'level2SqMeters'];
+        const parsedValue = numericFields.includes(name) ? Number(value) : value;
 
         setPayload({
             ...payload,
@@ -108,7 +112,23 @@ export function PropertyForm({ payload, setPayload }: Props) {
         });
     };
 
+    const handlePropertyTypeChange = (val: string) => {
+        setPayload({
+            ...payload,
+            property: {
+                ...payload.property,
+                propertyType: val,
+            } as any
+        });
+    };
+
     if (!property) return null;
+
+    const interiorSqM = (property as any).interiorSqMeters || 0;
+    const terraceSqM = (property as any).terraceSqMeters || 0;
+    const maintenanceMensual = interiorSqM * MAINTENANCE_RATE;
+    const propertyType = (property as any).propertyType || 'Apartamento';
+    const isVilla = propertyType === 'Villa';
 
     return (
         <Card>
@@ -118,11 +138,28 @@ export function PropertyForm({ payload, setPayload }: Props) {
                     {loading && <Loader2 className="w-4 h-4 text-emerald-500 animate-spin" />}
                 </CardTitle>
                 <CardDescription>
-                    {loading ? 'Sincronizando con base de datos del CRM (SQLite)...' : 'Selecciona el proyecto y unidad directamente del inventario maestro.'}
+                    {loading ? 'Sincronizando con base de datos del CRM...' : 'Selecciona el proyecto y unidad directamente del inventario maestro.'}
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    {/* Tipo de propiedad */}
+                    <div className="space-y-2">
+                        <Label>Tipo de Inmueble</Label>
+                        <Select value={propertyType} onValueChange={handlePropertyTypeChange}>
+                            <SelectTrigger>
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="Apartamento">🏢 Apartamento</SelectItem>
+                                <SelectItem value="Villa">🏡 Villa</SelectItem>
+                                <SelectItem value="TownHouse">🏘️ Town House</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    {/* Proyecto */}
                     <div className="space-y-2">
                         <Label>Proyecto</Label>
                         <Select
@@ -144,6 +181,7 @@ export function PropertyForm({ payload, setPayload }: Props) {
                         </Select>
                     </div>
 
+                    {/* Unidad */}
                     <div className="space-y-2">
                         <Label>Unidad</Label>
                         {property.project ? (
@@ -153,12 +191,12 @@ export function PropertyForm({ payload, setPayload }: Props) {
                                 disabled={availableUnits.length === 0}
                             >
                                 <SelectTrigger className={property.unitNumber ? "border-emerald-500 ring-1 ring-emerald-500" : ""}>
-                                    <SelectValue placeholder="Selecciona la unidad (Ej. A-402)" />
+                                    <SelectValue placeholder="Selecciona la unidad" />
                                 </SelectTrigger>
                                 <SelectContent className="max-h-[300px]">
                                     {availableUnits.map(u => (
                                         <SelectItem key={u.id} value={u.unitNumber}>
-                                            {u.unitNumber} ({u.type}) - ${u.basePrice?.toLocaleString()}
+                                            {u.unitNumber} — ${u.basePrice?.toLocaleString()}
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
@@ -168,6 +206,7 @@ export function PropertyForm({ payload, setPayload }: Props) {
                         )}
                     </div>
 
+                    {/* Nivel */}
                     <div className="space-y-2">
                         <Label>Nivel / Piso</Label>
                         <Input
@@ -180,18 +219,87 @@ export function PropertyForm({ payload, setPayload }: Props) {
                         />
                     </div>
 
+                    {/* Villa fields */}
+                    {isVilla && (
+                        <>
+                            <div className="space-y-2">
+                                <Label>Número de Lote</Label>
+                                <Input
+                                    type="text"
+                                    name="loteNumber"
+                                    value={(property as any).loteNumber || ''}
+                                    onChange={handleChange}
+                                    placeholder="Ej. Lote 8"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label>m² del Lote (Parcela)</Label>
+                                <Input
+                                    type="number"
+                                    name="loteSqMeters"
+                                    value={(property as any).loteSqMeters || ''}
+                                    onChange={handleChange}
+                                    placeholder="450"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label>m² Primer Nivel</Label>
+                                <Input
+                                    type="number"
+                                    name="level1SqMeters"
+                                    value={(property as any).level1SqMeters || ''}
+                                    onChange={handleChange}
+                                    placeholder="m² planta baja"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label>m² Segundo Nivel (si aplica)</Label>
+                                <Input
+                                    type="number"
+                                    name="level2SqMeters"
+                                    value={(property as any).level2SqMeters || ''}
+                                    onChange={handleChange}
+                                    placeholder="m² piso 2"
+                                />
+                            </div>
+                        </>
+                    )}
+
+                    {/* m² breakdown */}
                     <div className="space-y-2">
-                        <Label>Metros Cuadrados (Totales)</Label>
+                        <Label>m² Totales (construidos)</Label>
                         <Input
                             type="number"
                             name="squareMeters"
                             value={property.squareMeters || ''}
                             onChange={handleChange}
-                            readOnly
                             className="bg-muted"
                         />
                     </div>
 
+                    <div className="space-y-2">
+                        <Label>m² Terraza / Balcón</Label>
+                        <Input
+                            type="number"
+                            name="terraceSqMeters"
+                            value={(property as any).terraceSqMeters || ''}
+                            onChange={handleChange}
+                            placeholder="Ej. 17.43"
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label>m² Interior (para mantenimiento)</Label>
+                        <Input
+                            type="number"
+                            name="interiorSqMeters"
+                            value={(property as any).interiorSqMeters || ''}
+                            onChange={handleChange}
+                            placeholder="Ej. 53.53"
+                        />
+                    </div>
+
+                    {/* Rooms / Bathrooms / AC */}
                     <div className="space-y-2">
                         <Label>Habitaciones</Label>
                         <Input
@@ -199,7 +307,6 @@ export function PropertyForm({ payload, setPayload }: Props) {
                             name="rooms"
                             value={property.rooms || ''}
                             onChange={handleChange}
-                            readOnly
                             className="bg-muted"
                         />
                     </div>
@@ -211,10 +318,45 @@ export function PropertyForm({ payload, setPayload }: Props) {
                             name="bathrooms"
                             value={property.bathrooms || ''}
                             onChange={handleChange}
-                            readOnly
-                            className="bg-muted tracking-wide font-medium"
+                            className="bg-muted"
                         />
                     </div>
+
+                    <div className="space-y-2">
+                        <Label>Aires Acondicionados</Label>
+                        <Input
+                            type="number"
+                            name="airConditioners"
+                            value={(property as any).airConditioners || ''}
+                            onChange={handleChange}
+                            placeholder="Ej. 2"
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label>Parqueos</Label>
+                        <Input
+                            type="number"
+                            name="parkingSpaces"
+                            value={(property as any).parkingSpaces || ''}
+                            onChange={handleChange}
+                            placeholder="Ej. 1"
+                        />
+                    </div>
+
+                    {/* Maintenance summary */}
+                    {interiorSqM > 0 && (
+                        <div className="md:col-span-2 p-4 rounded-xl bg-sky-50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-800 space-y-1">
+                            <p className="text-sm font-semibold text-sky-700 dark:text-sky-300">🏠 Mantenimiento estimado (Art. UNDÉCIMO)</p>
+                            <div className="flex justify-between text-sm">
+                                <span className="text-muted-foreground">{interiorSqM} m² interiores × ${MAINTENANCE_RATE} USD</span>
+                                <span className="font-bold text-sky-700 dark:text-sky-300">${maintenanceMensual.toLocaleString('es-DO', { minimumFractionDigits: 2 })}/mes + impuestos</span>
+                            </div>
+                            {terraceSqM > 0 && (
+                                <p className="text-xs text-muted-foreground">Terraza ({terraceSqM} m²) no incluida en la base de mantenimiento.</p>
+                            )}
+                        </div>
+                    )}
                 </div>
             </CardContent>
         </Card>
