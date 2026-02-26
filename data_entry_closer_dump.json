@@ -1,0 +1,202 @@
+[
+  {
+    "id": 1,
+    "nombre": "KAM Supervisor",
+    "email": "kam1@larimar.com",
+    "telefono": "+1-809-555-0101",
+    "activo": 1,
+    "fecha_creacion": "2025-10-29 00:09:24.677922",
+    "fecha_actualizacion": "2025-10-29 00:09:24.677963",
+    "user_id": null
+  },
+  {
+    "id": 2,
+    "nombre": "Alberto muñoz",
+    "email": "albertomu@larimarcity.com",
+    "telefono": "N/A",
+    "activo": 1,
+    "fecha_creacion": "2025-10-29 00:45:09.466914",
+    "fecha_actualizacion": "2025-11-27 13:11:02.470231",
+    "user_id": null
+  },
+  {
+    "id": 3,
+    "nombre": "jj alonso",
+    "email": "jj.alonso@larimarcity.com",
+    "telefono": "N/A",
+    "activo": 1,
+    "fecha_creacion": "2025-10-29 00:45:10.130656",
+    "fecha_actualizacion": "2025-11-27 13:12:52.381196",
+    "user_id": null
+  },
+  {
+    "id": 4,
+    "nombre": "Luis velazquez",
+    "email": "luis.velazquez@larimarcity.com",
+    "telefono": "N/A",
+    "activo": 1,
+    "fecha_creacion": "2025-10-29 00:45:10.786978",
+    "fecha_actualizacion": "2025-10-29 00:45:10.787021",
+    "user_id": 21
+  },
+  {
+    "id": 5,
+    "nombre": "victor zazueta",
+    "email": "victor.zazueta@larimarcity.com",
+    "telefono": "N/A",
+    "activo": 1,
+    "fecha_creacion": "2025-10-29 00:45:11.401106",
+    "fecha_actualizacion": "2025-10-29 00:45:11.401154",
+    "user_id": null
+  },
+  {
+    "id": 6,
+    "nombre": "yeison gomez",
+    "email": "yeison.gomez@larimarcity.com",
+    "telefono": "N/A",
+    "activo": 1,
+    "fecha_creacion": "2025-10-29 00:45:12.012870",
+    "fecha_actualizacion": "2025-10-29 00:45:12.012912",
+    "user_id": 23
+  },
+  {
+    "id": 12,
+    "nombre": "Francris Arata",
+    "email": "francris.arata@larimarcity.com",
+    "telefono": "N/A",
+    "activo": 1,
+    "fecha_creacion": "2025-11-26 17:03:58.483592",
+    "fecha_actualizacion": "2025-12-01 21:33:18.147338",
+    "user_id": null
+  },
+  {
+    "id": 13,
+    "nombre": "Ivan Ortega",
+    "email": "ivan.ortega@larimarcity.com",
+    "telefono": "N/A",
+    "activo": 1,
+    "fecha_creacion": "2025-11-26 17:03:58.495738",
+    "fecha_actualizacion": "2025-12-01 21:33:30.854246",
+    "user_id": 53
+  },
+  {
+    "id": 14,
+    "nombre": "Laurent Cassvan",
+    "email": "laurent.cassvan@larimarcity.com",
+    "telefono": "N/A",
+    "activo": 1,
+    "fecha_creacion": "2025-11-26 17:03:58.510587",
+    "fecha_actualizacion": "2025-12-01 21:30:43.076087",
+    "user_id": 105
+  },
+  {
+    "id": 15,
+    "nombre": "Mariola Sanchez",
+    "email": "mariola.sanchez@larimarcity.com",
+    "telefono": "N/A",
+    "activo": 1,
+    "fecha_creacion": "2025-11-26 17:03:58.523782",
+    "fecha_actualizacion": "2025-12-01 21:33:58.689423",
+    "user_id": 31
+  },
+  {
+    "id": 16,
+    "nombre": "Marisol Báez",
+    "email": "marisol.baez@larimarcity.com",
+    "telefono": "N/A",
+    "activo": 1,
+    "fecha_creacion": "2025-11-26 17:03:58.537591",
+    "fecha_actualizacion": "2025-12-01 21:34:30.853208",
+    "user_id": 43
+  },
+  {
+    "id": 17,
+    "nombre": "Sergia Adames",
+    "email": "sergia.adames@larimarcity.com",
+    "telefono": "N/A",
+    "activo": 1,
+    "fecha_creacion": "2025-11-28 13:50:16.265132",
+    "fecha_actualizacion": "2025-12-01 21:34:11.888200",
+    "user_id": 106
+  },
+  {
+    "id": 18,
+    "nombre": "Angela Mora",
+    "email": "angela.mora@larimarcity.com",
+    "telefono": "N/A",
+    "activo": 1,
+    "fecha_creacion": "2025-11-28 14:57:01.311377",
+    "fecha_actualizacion": "2025-12-01 21:31:12.450378",
+    "user_id": 98
+  },
+  {
+    "id": 19,
+    "nombre": "Juan Andrés",
+    "email": "juan@clerhp.com",
+    "telefono": "N/A",
+    "activo": 1,
+    "fecha_creacion": "2025-11-28 15:23:19.347121",
+    "fecha_actualizacion": "2025-11-28 15:23:19.347153",
+    "user_id": null
+  },
+  {
+    "id": 20,
+    "nombre": "José Manuel Garrido",
+    "email": "jose.garrido@larimarcity.com",
+    "telefono": "N/A",
+    "activo": 1,
+    "fecha_creacion": "2025-11-29 00:16:47.283222",
+    "fecha_actualizacion": "2025-11-29 00:16:47.283264",
+    "user_id": 99
+  },
+  {
+    "id": 21,
+    "nombre": "María Guzman",
+    "email": "maria.guzman@larimarcity.com",
+    "telefono": "N/A",
+    "activo": 1,
+    "fecha_creacion": "2025-11-29 01:09:40.797117",
+    "fecha_actualizacion": "2026-01-28 21:24:26.525006",
+    "user_id": 116
+  },
+  {
+    "id": 22,
+    "nombre": "Angela Moyano",
+    "email": "angela.moyano@larimarcity.com",
+    "telefono": "N/A",
+    "activo": 1,
+    "fecha_creacion": "2025-11-29 01:22:54.688390",
+    "fecha_actualizacion": "2025-11-29 01:25:21.141701",
+    "user_id": 100
+  },
+  {
+    "id": 23,
+    "nombre": "Ana Pomares",
+    "email": "ana.pomares@larimarcity.com",
+    "telefono": "N/A",
+    "activo": 1,
+    "fecha_creacion": "2025-11-29 01:57:38.447705",
+    "fecha_actualizacion": "2025-12-02 16:14:47.466854",
+    "user_id": 25
+  },
+  {
+    "id": 24,
+    "nombre": "Ana Sanchez",
+    "email": "ana.sanchez@larimarcity.com",
+    "telefono": "N/A",
+    "activo": 1,
+    "fecha_creacion": "2025-11-29 02:07:30.442286",
+    "fecha_actualizacion": "2025-12-01 21:32:56.478762",
+    "user_id": 26
+  },
+  {
+    "id": 25,
+    "nombre": "1",
+    "email": "ventas@larimarcity.com",
+    "telefono": "N/A",
+    "activo": 1,
+    "fecha_creacion": "2026-02-18 14:24:52.014018",
+    "fecha_actualizacion": "2026-02-18 14:28:34.585602",
+    "user_id": null
+  }
+]

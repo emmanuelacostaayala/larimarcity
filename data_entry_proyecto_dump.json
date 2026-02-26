@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "nombre": "Aston Tower",
+    "descripcion": "",
+    "direccion": null,
+    "estado": "activo",
+    "fecha_creacion": "2025-10-28 23:22:27.462628",
+    "fecha_actualizacion": "2025-10-28 23:22:27.462673"
+  },
+  {
+    "id": 2,
+    "nombre": "Breeze Towers",
+    "descripcion": "",
+    "direccion": null,
+    "estado": "activo",
+    "fecha_creacion": "2025-10-28 23:22:27.467148",
+    "fecha_actualizacion": "2025-10-28 23:22:27.467219"
+  },
+  {
+    "id": 3,
+    "nombre": "Horizon View",
+    "descripcion": "",
+    "direccion": null,
+    "estado": "activo",
+    "fecha_creacion": "2025-10-28 23:22:27.470780",
+    "fecha_actualizacion": "2025-10-28 23:22:27.470823"
+  },
+  {
+    "id": 4,
+    "nombre": "Kairos",
+    "descripcion": "",
+    "direccion": null,
+    "estado": "activo",
+    "fecha_creacion": "2025-10-28 23:22:27.473986",
+    "fecha_actualizacion": "2025-10-28 23:22:27.474027"
+  },
+  {
+    "id": 5,
+    "nombre": "Paradise",
+    "descripcion": "",
+    "direccion": null,
+    "estado": "activo",
+    "fecha_creacion": "2025-10-28 23:22:27.477731",
+    "fecha_actualizacion": "2025-10-28 23:22:27.477773"
+  },
+  {
+    "id": 6,
+    "nombre": "Prime Towers",
+    "descripcion": "",
+    "direccion": null,
+    "estado": "activo",
+    "fecha_creacion": "2025-10-28 23:22:27.480852",
+    "fecha_actualizacion": "2025-10-28 23:22:27.480895"
+  },
+  {
+    "id": 7,
+    "nombre": "Sunset Residences",
+    "descripcion": "",
+    "direccion": null,
+    "estado": "activo",
+    "fecha_creacion": "2025-10-28 23:22:27.483806",
+    "fecha_actualizacion": "2025-10-28 23:22:27.483846"
+  },
+  {
+    "id": 8,
+    "nombre": "Town House",
+    "descripcion": "",
+    "direccion": null,
+    "estado": "activo",
+    "fecha_creacion": "2025-10-28 23:22:27.486742",
+    "fecha_actualizacion": "2025-10-28 23:22:27.486781"
+  },
+  {
+    "id": 9,
+    "nombre": "Villa Golf",
+    "descripcion": "",
+    "direccion": null,
+    "estado": "activo",
+    "fecha_creacion": "2025-10-28 23:22:27.490280",
+    "fecha_actualizacion": "2025-10-28 23:22:27.490320"
+  },
+  {
+    "id": 10,
+    "nombre": "Proyecto General",
+    "descripcion": "Proyecto general para todas las propiedades",
+    "direccion": "Dirección general",
+    "estado": "Activo",
+    "fecha_creacion": "2025-10-28 23:23:07.583997",
+    "fecha_actualizacion": "2025-10-28 23:23:07.584048"
+  }
+]

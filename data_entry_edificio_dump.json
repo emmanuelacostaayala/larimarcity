@@ -1,0 +1,58 @@
+[
+  {
+    "id": 2,
+    "nombre": "1",
+    "direccion": null,
+    "estado": "activo",
+    "pisos": 1,
+    "unidades": 1,
+    "fecha_construccion": null,
+    "descripcion": null,
+    "imagen": "",
+    "plano": "",
+    "fecha_creacion": "2025-10-31 23:39:59.609197",
+    "fecha_actualizacion": "2025-10-31 23:39:59.609235"
+  },
+  {
+    "id": 3,
+    "nombre": "2",
+    "direccion": null,
+    "estado": "activo",
+    "pisos": 1,
+    "unidades": 1,
+    "fecha_construccion": null,
+    "descripcion": null,
+    "imagen": "",
+    "plano": "",
+    "fecha_creacion": "2025-10-31 23:40:01.752757",
+    "fecha_actualizacion": "2025-10-31 23:40:01.752806"
+  },
+  {
+    "id": 4,
+    "nombre": "3",
+    "direccion": null,
+    "estado": "activo",
+    "pisos": 1,
+    "unidades": 1,
+    "fecha_construccion": null,
+    "descripcion": null,
+    "imagen": "",
+    "plano": "",
+    "fecha_creacion": "2025-10-31 23:40:05.028084",
+    "fecha_actualizacion": "2025-10-31 23:40:05.028114"
+  },
+  {
+    "id": 5,
+    "nombre": "4",
+    "direccion": null,
+    "estado": "activo",
+    "pisos": 1,
+    "unidades": 1,
+    "fecha_construccion": null,
+    "descripcion": null,
+    "imagen": "",
+    "plano": "",
+    "fecha_creacion": "2025-10-31 23:40:05.465862",
+    "fecha_actualizacion": "2025-10-31 23:40:05.465888"
+  }
+]
