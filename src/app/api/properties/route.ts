@@ -5,7 +5,7 @@ export async function GET() {
     try {
         const properties = await prisma.data_entry_propiedad.findMany({
             where: {
-                estado: 'libre' // Only fetch available units
+                estado: 'libre'
             },
             select: {
                 id: true,
@@ -33,19 +33,27 @@ export async function GET() {
             projectId: p.proyecto_id,
             unitNumber: p.apartamento || p.codigo || '',
             level: p.nivel || '',
-            squareMeters: Number(p.m2_totales) || Number(p.area) || 0, // Fallback to area if m2_totales is null
+            squareMeters: Number(p.m2_totales) || Number(p.area) || 0,
             rooms: p.habitaciones || 0,
             bathrooms: p.banos || 0,
             basePrice: Number(p.precio) || 0,
             type: p.tipo || 'Apartamento',
         }));
 
-        // Group by project for easier frontend rendering if needed
-        // Or just return the flat list and let frontend handle it.
-
         return NextResponse.json(formatted);
+
     } catch (error: any) {
-        console.error('Failed to fetch properties:', error);
-        return NextResponse.json({ error: 'Failed to fetch properties', details: error.message }, { status: 500 });
+        // Detailed logging — check Vercel Functions → Logs after deploying
+        console.error('[/api/properties] PRODUCTION ERROR:', {
+            message: error.message,
+            code: error.code,              // P1001 = can't connect to DB, P1003 = schema missing
+            hasDatabaseUrl: !!process.env.DATABASE_URL,
+            databaseUrlPreview: process.env.DATABASE_URL?.substring(0, 30) + '...',
+            nodeEnv: process.env.NODE_ENV,
+        });
+        return NextResponse.json(
+            { error: 'Failed to fetch properties', details: error.message, code: error.code },
+            { status: 500 }
+        );
     }
 }
